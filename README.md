@@ -9,4 +9,4 @@ Pero para llevar esta aplicación independiente, se decidió pasarla a un reposi
 - Implementarle autenticación: Que cada usuario tenga sus propias tareas.
 - Conectar con una base de datos en Turso o una de google u otra
 - Mejorar el modo oscuro.
-- 
+
