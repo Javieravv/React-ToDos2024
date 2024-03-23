@@ -1,0 +1,60 @@
+$padding-input: 12px;
+$border-radiusform: 6px;
+
+.formtodo {
+    padding: 10px 10px;
+    padding-bottom: $padding-input;
+    border-bottom: 2px solid var(--color-header);
+    width: 98%;
+    max-width: $max-width;
+    margin: 0 auto;
+
+    &_form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    &_label {
+        font-weight: 800;
+    }
+
+    &_input {
+        padding: $padding-input $padding-input;
+        border-radius: $border-radiusform;
+        font-weight: bold;
+        font-size: 1rem;
+        border: 1px solid $color-borderinput;
+    }
+
+    &_submit {
+        padding: $padding-input $padding-input;
+        border-radius: $border-radiusform;
+        border: 1px solid $color-borderinput;
+        background-color: var(--color-header);
+        color: $color-title;
+        font-weight: bolder;
+        cursor: pointer;
+    &:hover {
+        background-color: $color-deletebtn;
+        
+    }
+    }
+
+    @media (width > $widthMobile) {
+        &_form {
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
+        }
+
+        &_input {
+            flex: 1;
+        }
+
+        &_submit {
+            margin-right: auto;
+            min-width: 200px;
+        }
+    }
+}

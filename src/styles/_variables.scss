@@ -1,0 +1,24 @@
+$max-width: 950px;
+$widthMobile: 550px;
+
+// Colors
+// var(--color-header): rgb(56, 156, 209);
+$color-deletebtn: rgb(16, 10, 137);
+$color-borderinput: rgba(5, 5, 181, 0.843);
+$color-title: rgba(255, 255, 255, 0.957);
+$colorBackground-btn: rgba(246, 38, 38, 0.9);
+$colorBacground: white;
+
+:root[data-theme='light'] {
+    --color-header: rgb(56, 156, 209);
+    --color-titleList: var(--color-header);
+    background-color: white;
+    color: black;
+}
+
+:root[data-theme='dark'] {
+    --color-header: rgb(7, 4, 89);
+    --color-titleList: white;
+    background-color: rgba(5, 5, 5, 0.943);
+    color: white;
+}

@@ -1,0 +1,22 @@
+.header {
+    background-color: var(--color-header);
+    
+    nav {
+        width: 98%;
+        max-width: $max-width;
+        margin: 0 auto;
+        padding: 15px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        h2 {
+            color: $color-title;
+            font-size: 1.2rem;
+        }
+
+        @media (width > $widthMobile) {
+            padding: 15px px;
+        }
+    }
+}
