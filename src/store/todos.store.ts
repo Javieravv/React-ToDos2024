@@ -4,97 +4,89 @@ import { TypeTodo, todosList } from '../interfaces/interfacesTodos';
 import { devtools, persist } from 'zustand/middleware';
 
 interface TodoState {
-    todosPending: todosList[];
-    todosFinished: todosList[];
+    listTodos: todosList[];
     inputTodo: string;
     theme_todos: string;
     controlThemeTodos: boolean;
     controlTodosPending: boolean;
     controlTodosFinished: boolean;
-    
-    getThemeTodos: () => string;
-    changeStateAllTodos: (todos: todosList[], stateTodo: boolean, typeTodo: TypeTodo) => void;
-    changeTheme: (controlTheme: boolean) => void;
-    addTodo: (todo: todosList, typeTodo: TypeTodo) => void;
-    deleteTodo: (indexTodo: number, typeTodo: TypeTodo) => void;
-    changeStatusTodo: (idTodo: number, typeTodo: TypeTodo) => void;
-    changeControlTodos: (valueControl: boolean, typeTodo: TypeTodo) => void;
-    toggleTodos: (typeTodo: TypeTodo) => void;
-    getTotalTodosActive: (typeTodo: TypeTodo) => number;
-}
 
+    getThemeTodos: () => string;
+    changeTheme: (controlTheme: boolean) => void;
+    changeStateAllTodos: (stateTodo: boolean, typeTodo: TypeTodo) => void;
+    addTodo: (todo: todosList, typeTodo: TypeTodo) => void;
+    deleteTodo: (indexTodo: string) => void;
+    changeStatusTodo: (idTodo: string) => void;
+    changeControlTodos: (valueControl: boolean, typeTodo: TypeTodo) => void;
+    toggleTodos: (typeTodoOrigin: TypeTodo, typeTodoDestino: TypeTodo) => void;
+    getTotalTodosActive: (typeTodo: TypeTodo) => number;
+    getTodos: (typeTodo: TypeTodo) => todosList[];
+}
 
 export const useTodosStore = create<TodoState>()(
     // Con la instrucción persist se guarda el store en localStore
     devtools(
         persist(
             (set, get) => ({
-                todosPending: [],
-                todosFinished: [],
+                listTodos: [],
                 inputTodo: '',
                 theme_todos: 'light',
                 controlThemeTodos: false,
                 controlTodosPending: false,
                 controlTodosFinished: false,
 
+                // Devolver el tema de la aplicacion
                 getThemeTodos: () => {
                     return get().theme_todos;
                 },
 
-                changeStateAllTodos: (todos: todosList[], stateTodo: boolean, typeTodo: TypeTodo) => {
-                    const tempTodos = todos.map(itemTodo => {
-                        return { ...itemTodo, stateTodo }
+                // Cambiar el tema de la aplicacion
+                changeTheme: (controlTheme: boolean) => {
+                    set({ controlThemeTodos: controlTheme })
+                    set({ theme_todos: get().controlThemeTodos ? 'dark' : 'light' })
+                },
+
+                // Pasar todos los todos de la lista a seleccionados o desseleccionados.
+                changeStateAllTodos: (stateTodo: boolean, typeTodo: TypeTodo) => {
+                    const tempTodos: todosList[] = get().listTodos.map(itemTodo => {
+                        if (itemTodo.typeTodo === typeTodo) {
+                            return { ...itemTodo, stateTodo }
+                        }
+                        return itemTodo;
                     });
-                    (typeTodo === 'Pending')
-                        ? set(({ todosPending: tempTodos }))
-                        : set(({ todosFinished: tempTodos }))
+                    set(({ listTodos: tempTodos }))
                 },
 
-                changeTheme: (controlTheme: boolean) => { 
-                    set ( { controlThemeTodos: controlTheme })  
-                    set ({ theme_todos: get().controlThemeTodos ? 'dark' : 'light' }) 
-                },
-                
-                addTodo: (todo: todosList, typeTodo: TypeTodo) => {
-                    (typeTodo === 'Pending')
-                        ? set(state => ({ todosPending: [...state.todosPending, todo] }))
-                        : set(state => ({ todosFinished: [...state.todosFinished, todo] }))
+                // Adicionar un todo
+                addTodo: (todo: todosList) => {
+                    set(state => ({ listTodos: [...state.listTodos, todo] }))
                 },
 
-                deleteTodo: (indexTodo: number, typeTodo: TypeTodo) => {
-                    let todosTemp: todosList[];
-                    switch (typeTodo) {
-                        case 'Pending':
-                            todosTemp = [...get().todosPending];
-                            todosTemp.splice(indexTodo, 1);
-                            set(({ todosPending: [...todosTemp] }))
-                            break;
-                        case 'Completed':
-                            todosTemp = [...get().todosFinished];
-                            todosTemp.splice(indexTodo, 1);
-                            set(({ todosFinished: [...todosTemp] }))
-                            break;
+                // Eliminar un todo
+                deleteTodo: (indexTodo: string) => {
+                    const todosTemp: todosList[] = [...get().listTodos].filter( itemTodo => itemTodo.id != indexTodo);
+                    set(({ listTodos: [...todosTemp] }))
+                },
+
+                // Cambiar si el todo está seleccionado o no.
+                changeStatusTodo: (idTodo: string) => {
+                    let ctrlIndexTodo: number = -1;
+                    const todoTemp: todosList[] = [...get().listTodos].map( (todo, index) => {
+                        if (todo.id === idTodo ) {
+                            ctrlIndexTodo = index;
+                            return {...todo, stateTodo: !todo.stateTodo}
+                        }
+                        return todo;
+                    });
+                    set(({ listTodos: [...todoTemp] }))
+                    if ( ctrlIndexTodo > -1) {
+                        get().listTodos[ctrlIndexTodo].typeTodo === 'Pending'
+                        ? set(({ controlTodosPending: false }))
+                        : set(({ controlTodosFinished: false }))
                     }
                 },
 
-                changeStatusTodo: (idTodo: number, typeTodo: TypeTodo) => {
-                    let todoTemp: todosList[];
-                    switch (typeTodo) {
-                        case 'Pending':
-                            todoTemp = [...get().todosPending];
-                            todoTemp[idTodo].stateTodo = !todoTemp[idTodo].stateTodo;
-                            set(({ todosPending: [...todoTemp] }))
-                            set(({ controlTodosPending: false }))
-                            break;
-                        case 'Completed':
-                            todoTemp = [...get().todosFinished];
-                            todoTemp[idTodo].stateTodo = !todoTemp[idTodo].stateTodo;
-                            set(({ todosFinished: [...todoTemp] }))
-                            set(({ controlTodosFinished: false }))
-                            break;
-                    }
-                },
-
+                // Cambiar las variables de control de todos pendientes y finalizados
                 changeControlTodos: (valueControl: boolean, typeTodo: TypeTodo) => {
                     (typeTodo === 'Pending')
                         ? set({ controlTodosPending: valueControl })
@@ -104,52 +96,35 @@ export const useTodosStore = create<TodoState>()(
                 // Obtener total de tareas pendinetes o finalizadas.
                 getTotalTodosActive: (typeTodo: TypeTodo) => {
                     let totTodosType: number = 0;
-                    switch (typeTodo) {
-                        case 'Completed':
-                            totTodosType = get().todosFinished.reduce((prev, curr) => {
-                                if (curr.stateTodo) {
-                                    prev++;
-                                }
-                                return prev;
-                            }, 0)
-                            break;
-                        case 'Pending':
-                            totTodosType = get().todosPending.reduce((prev, curr) => {
-                                if (curr.stateTodo) {
-                                    prev++;
-                                }
-                                return prev;
-                            }, 0)
-                            break;
-                    }
+                    totTodosType = get().listTodos.reduce((prev, curr) => {
+                        if (curr.typeTodo === typeTodo && curr.stateTodo) {
+                            prev++;
+                        }
+                        return prev;
+                    }, 0)
                     return totTodosType;
                 },
 
-                toggleTodos: (typeTodo: TypeTodo) => {
-                    if (typeTodo === 'Pending') {
-                        const todosPendinChecked: todosList[] = get().todosPending.filter(todo => todo.stateTodo === true)
-                            .map(todo => {
-                                return { ...todo, stateTodo: false, typeTodo: 'Completed' }
-                            });
-                        const todosPendinUnChecked: todosList[] = get().todosPending.filter(todo => todo.stateTodo === false);
-                        set({ todosFinished: [...get().todosFinished, ...todosPendinChecked] });
-                        set({ todosPending: [...todosPendinUnChecked] });
-                        set({ controlTodosPending: false })
-                    }
-
-                    if (typeTodo === 'Completed') {
-                        const todosFinishChecked: todosList[] = get().todosFinished.filter(todo => todo.stateTodo === true)
-                            .map(todo => {
-                                return { ...todo, stateTodo: false, typeTodo: 'Pending' }
-                            });
-                        const todosFinishUnChecked: todosList[] = get().todosFinished.filter(todo => todo.stateTodo === false);
-                        set({ todosPending: [...get().todosPending, ...todosFinishChecked] });
-                        set({ todosFinished: [...todosFinishUnChecked] });
-                        set({ controlTodosFinished: false })
-                    }
+                // Cambiamos los todos de pendientes a terminados y viceversa
+                toggleTodos: (typeTodoOrigin: TypeTodo, typeTodoDestino: TypeTodo) => {
+                    const todosTypeChecked: todosList[] = get().listTodos.map((todo) =>{
+                        if (todo.typeTodo === typeTodoOrigin && todo.stateTodo === true) {
+                            return {...todo, stateTodo: false, typeTodo: typeTodoDestino}
+                        }
+                        return todo;
+                    })
+                    
+                    set({ listTodos: [...todosTypeChecked] });
+                    set({ controlTodosPending: false })
                 },
 
-            }), { name: 'tasks-javv' }
+                // Traemos lista de todos, ocnforme con el tipo
+                getTodos: (typeTodo: TypeTodo) => {
+                    const listAllTodos = get().listTodos.filter(todo => todo.typeTodo === typeTodo);
+                    return listAllTodos;
+                },
+
+            }), { name: 'tasks-javv-1' }
         )
     )
 )

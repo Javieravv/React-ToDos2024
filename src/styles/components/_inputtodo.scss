@@ -15,16 +15,26 @@ $border-radiusform: 6px;
         gap: 15px;
     }
 
+    .formtodo_inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
     &_label {
         font-weight: 800;
     }
 
-    &_input {
+    &_input, &_textarea {
         padding: $padding-input $padding-input;
         border-radius: $border-radiusform;
         font-weight: bold;
         font-size: 1rem;
-        border: 1px solid $color-borderinput;
+        border: 2px solid $color-borderinput;
+    }
+
+    &_textarea {
+        resize: none;
     }
 
     &_submit {
@@ -44,17 +54,18 @@ $border-radiusform: 6px;
     @media (width > $widthMobile) {
         &_form {
             flex-direction: row;
-            align-items: center;
+            align-items: start;
             gap: 15px;
         }
 
-        &_input {
+        &_inputs {
             flex: 1;
         }
 
         &_submit {
             margin-right: auto;
-            min-width: 200px;
+            min-width: 150px;
+            margin-top: 25px;
         }
     }
 }
