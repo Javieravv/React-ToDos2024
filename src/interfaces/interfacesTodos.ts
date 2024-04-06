@@ -1,7 +1,9 @@
 export type TypeTodo = 'Pending' | 'Completed';
 
 export interface todosList {
-    todo: string;
+    id: string;
+    title: string;
+    description?: string;
     stateTodo: boolean;
     typeTodo: TypeTodo;
 }

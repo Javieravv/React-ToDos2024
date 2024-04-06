@@ -1,42 +1,81 @@
 // Componente para las listas de todos
-import { FC } from "react";
-import { todosProps } from "../interfaces/interfacesTodos";
+import { FC, useState } from "react";
+import { todosList, todosProps } from "../interfaces/interfacesTodos";
 import { useTodosStore } from '../store/todos.store';
+import { MdDelete, MdModeEditOutline } from "react-icons/md";
+import { IoIosArrowForward, IoIosArrowUp  } from "react-icons/io";
 
-const MostrarToDos: FC<todosProps> = ({ todos }) => {
+const MostrarTodo: FC<todosList> = (todo) => {
     const changeStatusTodo = useTodosStore(state => state.changeStatusTodo);
     const deleteTodo = useTodosStore(state => state.deleteTodo);
+    const [viewDescription, setViewDescription] = useState(false)
+    return (
+        <>
+            <li key={todo.id}>
+                <div className="titletodo">
+                    <label
+                        htmlFor={`todopendiente-${todo.id}`}
+                    >
+                        <input
+                            type="checkbox"
+                            name={`todopendiente-${todo.title}`}
+                            id={`todopendiente-${todo.id}`}
+                            checked={todo.stateTodo}
+                            onChange={() => {
+                                changeStatusTodo(todo.id)
+                            }}
+                        />
+                        {todo.title}
+                    </label>
 
+                    <div className="iconos_todo">
+                        <div className="icono_edit">
+                            <MdModeEditOutline 
+                                onClick={() => alert(`Editamos...${todo.title}`)}
+                            />
+                        </div>
+                        <div className="icono_viewdescription">
+                            {
+                                (!viewDescription)
+                                    ? (<IoIosArrowForward className="svgIconoDescription" onClick={() => setViewDescription(!viewDescription)}/> )
+                                    : (<IoIosArrowUp className="svgIconoDescription" onClick={() => setViewDescription(!viewDescription)} />)
+                            }
+                        </div>
+                        <div
+                            className="iconodelete"
+                            onClick={() => deleteTodo(todo.id)}
+                        >
+                            {/* <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M53.21 467c1.562 24.84 23.02 45 47.9 45h245.8c24.88 0 46.33-20.16 47.9-45L416 128H32L53.21 467zM432 32H320l-11.58-23.16c-2.709-5.42-8.25-8.844-14.31-8.844H153.9c-6.061 0-11.6 3.424-14.31 8.844L128 32H16c-8.836 0-16 7.162-16 16V80c0 8.836 7.164 16 16 16h416c8.838 0 16-7.164 16-16V48C448 39.16 440.8 32 432 32z" /></svg> */}
+                            <MdDelete className="svgIconDelete" />
+                        </div>
+
+                    </div>
+
+                </div>
+                {
+                    (viewDescription) && (
+                        <div className="descriptiontodo">
+                            <p>{todo.description}</p>
+                        </div>
+                    )
+                }
+            </li>
+        </>
+    )
+}
+
+// Mostramos todos los Todos. Para cada Todo lo mostraremos en un componente individual
+const MostrarToDos: FC<todosProps> = ({ todos }) => {
     console.log('RENDERIZAMOS TODOSSSS');
 
     return (
+
         <>
             <ul>
                 {
-                    todos.map((todo, index) => {
+                    todos.map((todo) => {
                         return (
-                            <li key={todo.todo}>
-                                <label
-                                    htmlFor={`todopendiente-${todo.todo}`}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        name={`todopendiente-${todo.todo}`}
-                                        id={`todopendiente-${todo.todo}`}
-                                        checked={todo.stateTodo}
-                                        onChange={() => {
-                                            changeStatusTodo(index, todo.typeTodo)
-                                        }}
-                                    />
-                                    {todo.todo}
-                                </label>
-                                <div 
-                                    className="iconodelete"
-                                    onClick={() => deleteTodo(index, todo.typeTodo)}
-                                    >
-                                    <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M53.21 467c1.562 24.84 23.02 45 47.9 45h245.8c24.88 0 46.33-20.16 47.9-45L416 128H32L53.21 467zM432 32H320l-11.58-23.16c-2.709-5.42-8.25-8.844-14.31-8.844H153.9c-6.061 0-11.6 3.424-14.31 8.844L128 32H16c-8.836 0-16 7.162-16 16V80c0 8.836 7.164 16 16 16h416c8.838 0 16-7.164 16-16V48C448 39.16 440.8 32 432 32z" /></svg>
-                                </div>
-                            </li>
+                            <MostrarTodo {...todo} />
                         )
                     })
                 }
@@ -47,20 +86,20 @@ const MostrarToDos: FC<todosProps> = ({ todos }) => {
 
 
 export const Listtodo = () => {
-    const todosPending = useTodosStore(state => state.todosPending);
-    const todosFinished = useTodosStore(state => state.todosFinished);
+    const todosPending = useTodosStore(state => state.getTodos('Pending'));
+    const todosFinished = useTodosStore(state => state.getTodos('Completed'));
     const controlTodosPending = useTodosStore(state => state.controlTodosPending);
     const controlTodosFinished = useTodosStore(state => state.controlTodosFinished);
     const totalTodosPending = useTodosStore(state => state.getTotalTodosActive('Pending'));
     const totalTodosFinished = useTodosStore(state => state.getTotalTodosActive('Completed'));
     const changeStateAllTodos = useTodosStore(state => state.changeStateAllTodos);
     const changeControlTodos = useTodosStore(state => state.changeControlTodos);
-    const toggleTodos = useTodosStore (state => state.toggleTodos);
+    const toggleTodos = useTodosStore(state => state.toggleTodos);
 
     return (
         <section className="listtodos">
             <article className="listtodos_activos">
-                <h3>Todos Pendientes</h3>
+                <h3>To-Dos Pendientes  <span>{todosPending.length}</span></h3>
                 <div className="listtodos_menu">
                     <label className="todopendientesall" htmlFor="todopendientesall">
                         <input
@@ -70,7 +109,7 @@ export const Listtodo = () => {
                             checked={controlTodosPending}
                             onChange={() => {
                                 changeControlTodos(!controlTodosPending, 'Pending');
-                                changeStateAllTodos(todosPending, !controlTodosPending, 'Pending');
+                                changeStateAllTodos(!controlTodosPending, 'Pending');
                             }}
                         />
                         Marcar todos
@@ -78,13 +117,14 @@ export const Listtodo = () => {
                     <button
                         className='listtodos_btn'
                         disabled={!(totalTodosPending > 0)}
-                        onClick={() => toggleTodos('Pending')}
-                    >Pasar a Terminadas</button>
+                        onClick={() => toggleTodos('Pending', 'Completed')}
+                    >Pasar a Terminadas
+                    </button>
                 </div>
                 <MostrarToDos todos={todosPending} />
             </article>
             <article className="listtodos_terminados">
-                <h3>Todos Terminados</h3>
+                <h3>To-Dos Terminados <span>{todosFinished.length}</span> </h3>
                 <div className="listtodos_menu">
                     <label className="todoterminadosall" htmlFor="todoterminadosall">
                         <input
@@ -94,7 +134,7 @@ export const Listtodo = () => {
                             checked={controlTodosFinished}
                             onChange={() => {
                                 changeControlTodos(!controlTodosFinished, 'Completed')
-                                changeStateAllTodos(todosFinished, !controlTodosFinished, 'Completed');
+                                changeStateAllTodos(!controlTodosFinished, 'Completed');
                             }}
                         />
                         Marcar todos
@@ -102,7 +142,7 @@ export const Listtodo = () => {
                     <button
                         className='listtodos_btn'
                         disabled={!(totalTodosFinished > 0)}
-                        onClick={() => toggleTodos('Completed')}
+                        onClick={() => toggleTodos('Completed', 'Pending')}
                     >
                         Pasar a Pendientes
                     </button>
