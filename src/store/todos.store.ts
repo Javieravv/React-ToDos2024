@@ -97,7 +97,7 @@ export const useTodosStore = create<TodoState>()(
 
                 // Cambiar si el todo está seleccionado o no.
                 editDataTodo: (idTodo: string, title: string, description: string) => {
-                    const todoTemp: todosList[] = [...get().listTodos].map( (todo, index) => {
+                    const todoTemp: todosList[] = [...get().listTodos].map( (todo) => {
                         if (todo.id === idTodo ) {
                             todo.title = title
                             todo.description = description
