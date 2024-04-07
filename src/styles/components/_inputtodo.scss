@@ -1,38 +1,8 @@
 $padding-input: 12px;
 $border-radiusform: 6px;
 
-.icono-arrow {
-    // color: red;
-    height: 35px;
-    width: 35px;
-    cursor: pointer;
-
-    &:hover {
-        color: blue;
-    }
-
-    color: var(--color-iconoarrow);
-}
-
-.icono-hidemform {
-    position: absolute;
-    right: 0;
-    bottom: 1%;
-}
-
-.form_visible {
-    opacity: 1;
-    transition: opacity 0.5s ease;
-}
-
-.form_hidem {
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    /* Define la transición */
-}
-
 .formtodo {
-    padding: 10px 10px;
+    padding: 10px 1px;
     padding-bottom: $padding-input;
     border-bottom: 2px solid var(--color-header);
     width: 98%;
@@ -52,8 +22,9 @@ $border-radiusform: 6px;
         // background-color: blue;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        // justify-content: space-between;
         height: 35px;
+        position: relative;
     }
 
     &_form {

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { useTodosStore } from "../store/todos.store"
 import { v4 as uuidv4 } from 'uuid';
 import { useItemStore } from "../store/itemtodo.store";
@@ -6,8 +6,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { MdArrowDownward, MdArrowUpward } from "react-icons/md";
 
 export const InputTodo = () => {
-    const [isVisibleForm, setIsVisibleForm] = useState(true)
-
     const inputTitleTodo = useRef<HTMLInputElement | null>(null);
     const todoItem = useItemStore(state => state.getTodo())
     const title = useItemStore(state => state.getTodoTitle());
@@ -18,6 +16,8 @@ export const InputTodo = () => {
 
     const addTodo = useTodosStore(state => state.addTodo)
     const editDataTodo = useTodosStore(state => state.editDataTodo)
+    const isVisibleForm = useTodosStore (state => state.getisVisibleFormToDo())
+    const toggleisVisibleFormToDo = useTodosStore(state => state.toggleisVisibleFormToDo)
 
     const handleClickTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault()
@@ -44,7 +44,7 @@ export const InputTodo = () => {
     const toggleForm = () => {
         // Retrasa la acción de mostrar/ocultar el formulario
         setTimeout(() => {
-            setIsVisibleForm(!isVisibleForm);
+            toggleisVisibleFormToDo();
         }, 200); // 200 milisegundos de retraso
       };
 

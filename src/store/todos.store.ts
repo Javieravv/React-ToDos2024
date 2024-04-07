@@ -10,6 +10,8 @@ interface TodoState {
     controlThemeTodos: boolean;
     controlTodosPending: boolean;
     controlTodosFinished: boolean;
+    isVisibleFormToDo: boolean;
+    isVisibleListToDo: boolean
 
     getThemeTodos: () => string;
     changeTheme: (controlTheme: boolean) => void;
@@ -22,6 +24,10 @@ interface TodoState {
     toggleTodos: (typeTodoOrigin: TypeTodo, typeTodoDestino: TypeTodo) => void;
     getTotalTodosActive: (typeTodo: TypeTodo) => number;
     getTodos: (typeTodo: TypeTodo) => todosList[];
+    toggleisVisibleFormToDo: () => void;
+    toggleisVisibleListToDo: () => void;
+    getisVisibleFormToDo: () => boolean;
+    getisVisibleListToDo: () => boolean;
 }
 
 export const useTodosStore = create<TodoState>()(
@@ -35,6 +41,8 @@ export const useTodosStore = create<TodoState>()(
                 controlThemeTodos: false,
                 controlTodosPending: false,
                 controlTodosFinished: false,
+                isVisibleFormToDo: true,
+                isVisibleListToDo: true,
 
                 // Devolver el tema de la aplicacion
                 getThemeTodos: () => {
@@ -137,6 +145,10 @@ export const useTodosStore = create<TodoState>()(
                     const listAllTodos = get().listTodos.filter(todo => todo.typeTodo === typeTodo);
                     return listAllTodos;
                 },
+                toggleisVisibleFormToDo: () => {set({ isVisibleFormToDo: !get().isVisibleFormToDo })},
+                toggleisVisibleListToDo: () => {set({ isVisibleListToDo: !get().isVisibleListToDo })},
+                getisVisibleFormToDo: () => {return get().isVisibleFormToDo},
+                getisVisibleListToDo: () => {return get().isVisibleListToDo},
 
             }), { name: 'tasks-javv-1' }
         )

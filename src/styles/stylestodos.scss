@@ -29,3 +29,37 @@ main {
     display: flex;
     flex-direction: column;
 }
+
+// Iconos comunes para varios componentes: inputtodo y listtodo
+
+.icono-arrow {
+    // color: red;
+    height: 35px;
+    width: 35px;
+    position: absolute;
+    right: 1%;
+    cursor: pointer;
+
+    &:hover {
+        color: blue;
+    }
+
+    color: var(--color-iconoarrow);
+}
+
+.icono-hidemform {
+    position: absolute;
+    right: 1%;
+    bottom: 1%;
+}
+
+.form_visible {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.form_hidem {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    /* Define la transición */
+}
