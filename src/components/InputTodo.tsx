@@ -1,33 +1,19 @@
 import { useRef } from "react"
-import { useTodosStore } from "../store/todos.store"
 import { v4 as uuidv4 } from 'uuid';
-import { useItemStore } from "../store/itemtodo.store";
 import { toast, ToastContainer } from "react-toastify";
 import { MdArrowDownward, MdArrowUpward } from "react-icons/md";
+import { useInputStorage } from './hooks.ts/useInputStorage'; // custom hook 
 
 export const InputTodo = () => {
     const inputTitleTodo = useRef<HTMLInputElement | null>(null);
-    const todoItem = useItemStore(state => state.getTodo())
-    const title = useItemStore(state => state.getTodoTitle());
-    const description = useItemStore(state => state.getTodoDescription());
-    const changeTitleItem = useItemStore(state => state.changeTitleItem);
-    const changeDescriptionItem = useItemStore(state => state.changeDescriptionItem)
-    const initializeItem = useItemStore(state => state.initializeItem)
 
-    const addTodo = useTodosStore(state => state.addTodo)
-    const editDataTodo = useTodosStore(state => state.editDataTodo)
-    const isVisibleForm = useTodosStore (state => state.getisVisibleFormToDo())
-    const toggleisVisibleFormToDo = useTodosStore(state => state.toggleisVisibleFormToDo)
+    const { todoItem, title, description, changeTitleItem, 
+        changeDescriptionItem, initializeItem, 
+        addTodo, editDataTodo, isVisibleForm, toggleisVisibleFormToDo } = useInputStorage()
 
     const handleClickTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault()
-        addTodo({
-            title: title,
-            stateTodo: false,
-            typeTodo: 'Pending',
-            id: uuidv4(),
-            description: description
-        }, 'Pending')
+        addTodo({title: title,stateTodo: false,typeTodo: 'Pending',id: uuidv4(),description: description}, 'Pending')
         toast.success('To-Do Agregado de manera exitosa.')
         initializeItem('', '', false, '');
         inputTitleTodo.current?.focus();
@@ -42,12 +28,10 @@ export const InputTodo = () => {
     }
 
     const toggleForm = () => {
-        // Retrasa la acción de mostrar/ocultar el formulario
         setTimeout(() => {
             toggleisVisibleFormToDo();
         }, 200); // 200 milisegundos de retraso
-      };
-
+    };
 
     return (
         <>

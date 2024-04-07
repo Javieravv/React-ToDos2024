@@ -7,6 +7,10 @@ section {
     flex-direction: column;
 }
 
+.description-todo {
+    white-space: pre-line;
+}
+
 .listtodos_title {
     // background-color: blue;
     display: flex;
@@ -14,6 +18,14 @@ section {
     justify-content: space-between;
     height: 35px;
     position: relative;
+}
+
+.todo-finished {
+    border: var(--border-TodoFinished);
+}
+
+.todo-pending {
+    border: var(--border-TodoPending);
 }
 
 .listtodos {
@@ -74,9 +86,10 @@ section {
     }
 
     article ul {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
+        display: grid;
+        grid-template-columns: 1fr;
+        // flex-direction: column;
+        gap: 8px;
         padding-bottom: 10px;
 
         li {
@@ -85,6 +98,9 @@ section {
             background-color: var(--bgcolor-liTodo);
             border-radius: 5px;
             color: var(--textcolor-liTodo);
+            display: flex;
+            flex-direction: column;
+            // justify-content: space-between;
         }
         
         .titletodo {
@@ -135,11 +151,37 @@ section {
             padding: 1px 8px;
         }
 
-    }
 
-    @media (width > $widthMobile) {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        .text-typetodo {
+                margin-top: auto;
+                display: flex;
+                justify-content: end;
+
+                span {
+                    padding: 5px;
+                    font-size: 0.75rem;
+                }
+        }
+
+        @media (width > calc($widthMobile + 200px)) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @media (width > calc($widthMobile + 300px)) {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    }
+}
+
+.todos-totales {
+    padding: 2px 10%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    cursor: pointer;
+
+    > * {
+        display: flex;
+        gap: 15px;
     }
 }

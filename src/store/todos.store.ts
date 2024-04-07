@@ -22,8 +22,10 @@ interface TodoState {
     editDataTodo: (idTodo: string, title: string, description: string) => void;
     changeControlTodos: (valueControl: boolean, typeTodo: TypeTodo) => void;
     toggleTodos: (typeTodoOrigin: TypeTodo, typeTodoDestino: TypeTodo) => void;
+    toggleTodoUnique: (idTodo: string, typeTodo: TypeTodo) => void;
     getTotalTodosActive: (typeTodo: TypeTodo) => number;
     getTodos: (typeTodo: TypeTodo) => todosList[];
+    getAllTodos: () => todosList[];
     toggleisVisibleFormToDo: () => void;
     toggleisVisibleListToDo: () => void;
     getisVisibleFormToDo: () => boolean;
@@ -119,7 +121,7 @@ export const useTodosStore = create<TodoState>()(
                 getTotalTodosActive: (typeTodo: TypeTodo) => {
                     let totTodosType: number = 0;
                     totTodosType = get().listTodos.reduce((prev, curr) => {
-                        if (curr.typeTodo === typeTodo && curr.stateTodo) {
+                        if (curr.typeTodo === typeTodo ) {
                             prev++;
                         }
                         return prev;
@@ -140,11 +142,30 @@ export const useTodosStore = create<TodoState>()(
                     set({ controlTodosPending: false })
                 },
 
+                // Cambiamos el todo de Pendint a Completed y viceversa.
+                toggleTodoUnique: (idTodo: string, typeTodo: TypeTodo) => {
+                    const newTypeTodo:TypeTodo = (typeTodo === 'Completed' ? 'Pending' : 'Completed')
+                    const todosTemp: todosList[] = get().listTodos.map((todo) =>{
+                        if (todo.id === idTodo) {
+                            return {...todo, typeTodo: newTypeTodo}
+                        }
+                        return todo;
+                    })
+                    
+                    set({ listTodos: [...todosTemp] });
+                },
+
                 // Traemos lista de todos, ocnforme con el tipo
                 getTodos: (typeTodo: TypeTodo) => {
                     const listAllTodos = get().listTodos.filter(todo => todo.typeTodo === typeTodo);
                     return listAllTodos;
                 },
+
+                // Traemos todos los todos.
+                getAllTodos: () => {
+                    return get().listTodos;
+                },
+
                 toggleisVisibleFormToDo: () => {set({ isVisibleFormToDo: !get().isVisibleFormToDo })},
                 toggleisVisibleListToDo: () => {set({ isVisibleListToDo: !get().isVisibleListToDo })},
                 getisVisibleFormToDo: () => {return get().isVisibleFormToDo},
