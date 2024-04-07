@@ -8,4 +8,5 @@ Se posibilitó editar los Todos, para lo cual se emplea el mismo formulario. Si 
 
 Para controlar si es nuevo o existente se emplea una variable en el Estado y también el id del Todo.
 
+Se modificará la forma de visualización de los Todos, para eliminar los botones de pasar de pendientes a terminados y dejar una sola forma de mostrar los Todos.
 
