@@ -24,4 +24,3 @@ Pero para llevar esta aplicación independiente, se decidió pasarla a un reposi
 ## Modificaciones a futuro
 
 - Cambiar la forma de presentacion de los Todos: Elaborar una tarjeta para cada Todo.
-- 

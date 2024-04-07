@@ -1,6 +1,36 @@
 $padding-input: 12px;
 $border-radiusform: 6px;
 
+.icono-arrow {
+    // color: red;
+    height: 35px;
+    width: 35px;
+    cursor: pointer;
+
+    &:hover {
+        color: blue;
+    }
+
+    color: var(--color-iconoarrow);
+}
+
+.icono-hidemform {
+    position: absolute;
+    right: 0;
+    bottom: 1%;
+}
+
+.form_visible {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.form_hidem {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    /* Define la transición */
+}
+
 .formtodo {
     padding: 10px 10px;
     padding-bottom: $padding-input;
@@ -8,6 +38,23 @@ $border-radiusform: 6px;
     width: 98%;
     max-width: $max-width;
     margin: 0 auto;
+    // border: 2px solid red;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .form_todo {
+        // border: 2px solid yellowgreen;
+        position: relative;
+    }
+
+    &_title {
+        // background-color: blue;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 35px;
+    }
 
     &_form {
         display: flex;
@@ -25,7 +72,8 @@ $border-radiusform: 6px;
         font-weight: 800;
     }
 
-    &_input, &_textarea {
+    &_input,
+    &_textarea {
         padding: $padding-input $padding-input;
         border-radius: $border-radiusform;
         font-weight: bold;
@@ -45,10 +93,11 @@ $border-radiusform: 6px;
         color: $color-title;
         font-weight: bolder;
         cursor: pointer;
-    &:hover {
-        background-color: $color-deletebtn;
-        
-    }
+
+        &:hover {
+            background-color: $color-deletebtn;
+
+        }
     }
 
     @media (width > $widthMobile) {

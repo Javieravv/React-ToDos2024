@@ -11,3 +11,10 @@ export interface todosList {
 export interface todosProps {
     todos: todosList[]; 
 }
+
+export interface todoItem {
+    title: string;
+    description: string;
+    status: boolean;
+    id?: string;
+}

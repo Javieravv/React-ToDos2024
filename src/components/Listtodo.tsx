@@ -4,11 +4,21 @@ import { todosList, todosProps } from "../interfaces/interfacesTodos";
 import { useTodosStore } from '../store/todos.store';
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { IoIosArrowForward, IoIosArrowUp  } from "react-icons/io";
+import { useItemStore } from "../store/itemtodo.store";
 
 const MostrarTodo: FC<todosList> = (todo) => {
     const changeStatusTodo = useTodosStore(state => state.changeStatusTodo);
     const deleteTodo = useTodosStore(state => state.deleteTodo);
     const [viewDescription, setViewDescription] = useState(false)
+    const initializeItem = useItemStore( state => state.initializeItem)
+
+    const handleEditTodo = (e: React.MouseEvent) => {
+        e.preventDefault();
+        initializeItem (todo.title, todo.description ?? '', true, todo.id)
+        window.scrollTo ({ top: 0, behavior: 'smooth' });
+        return false;
+    }
+
     return (
         <>
             <li key={todo.id}>
@@ -31,7 +41,7 @@ const MostrarTodo: FC<todosList> = (todo) => {
                     <div className="iconos_todo">
                         <div className="icono_edit">
                             <MdModeEditOutline 
-                                onClick={() => alert(`Editamos...${todo.title}`)}
+                                onClick = { handleEditTodo }
                             />
                         </div>
                         <div className="icono_viewdescription">
@@ -66,8 +76,6 @@ const MostrarTodo: FC<todosList> = (todo) => {
 
 // Mostramos todos los Todos. Para cada Todo lo mostraremos en un componente individual
 const MostrarToDos: FC<todosProps> = ({ todos }) => {
-    console.log('RENDERIZAMOS TODOSSSS');
-
     return (
 
         <>
@@ -75,7 +83,7 @@ const MostrarToDos: FC<todosProps> = ({ todos }) => {
                 {
                     todos.map((todo) => {
                         return (
-                            <MostrarTodo {...todo} />
+                            <MostrarTodo key={todo.id}  {...todo} />
                         )
                     })
                 }

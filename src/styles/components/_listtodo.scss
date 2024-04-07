@@ -63,8 +63,9 @@
         li {
             padding: 5px 2px;
             // border: 2px solid greenyellow;
-            // background-color: rgb(191, 239, 252);
-            border-radius: 10px;
+            background-color: var(--bgcolor-liTodo);
+            border-radius: 5px;
+            color: var(--textcolor-liTodo);
         }
         
         .titletodo {

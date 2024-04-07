@@ -17,6 +17,7 @@ interface TodoState {
     addTodo: (todo: todosList, typeTodo: TypeTodo) => void;
     deleteTodo: (indexTodo: string) => void;
     changeStatusTodo: (idTodo: string) => void;
+    editDataTodo: (idTodo: string, title: string, description: string) => void;
     changeControlTodos: (valueControl: boolean, typeTodo: TypeTodo) => void;
     toggleTodos: (typeTodoOrigin: TypeTodo, typeTodoDestino: TypeTodo) => void;
     getTotalTodosActive: (typeTodo: TypeTodo) => number;
@@ -84,6 +85,19 @@ export const useTodosStore = create<TodoState>()(
                         ? set(({ controlTodosPending: false }))
                         : set(({ controlTodosFinished: false }))
                     }
+                },
+
+                // Cambiar si el todo está seleccionado o no.
+                editDataTodo: (idTodo: string, title: string, description: string) => {
+                    const todoTemp: todosList[] = [...get().listTodos].map( (todo, index) => {
+                        if (todo.id === idTodo ) {
+                            todo.title = title
+                            todo.description = description
+                            return {...todo }
+                        }
+                        return todo;
+                    });
+                    set(({ listTodos: [...todoTemp] }))
                 },
 
                 // Cambiar las variables de control de todos pendientes y finalizados
