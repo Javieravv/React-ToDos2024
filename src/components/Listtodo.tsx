@@ -7,7 +7,7 @@ import { useListStorage } from "./hooks.ts/useListStorage";
 
 const MostrarTodo: FC<todosList> = (todo) => {
     const [viewDescription, setViewDescription] = useState(false)
-    const { changeStatusTodo, deleteTodo, initializeItem, toggleTodoUnique } = useListStorage()
+    const { deleteTodo, initializeItem, toggleTodoUnique } = useListStorage()
 
     const handleEditTodo = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -100,8 +100,7 @@ const MostrarToDos: FC<todosProps> = ({ todos }) => {
 
 
 export const Listtodo = () => {
-    const { todosPending, todosFinished, controlTodosPending, controlTodosFinished, totalTodosPending, totalTodosFinished,
-        changeStateAllTodos, changeControlTodos, toggleTodos, isVisibleListTodo, toggleisVisibleListToDo, listTodos } = useListStorage();
+    const { totalTodosPending, totalTodosFinished, isVisibleListTodo, toggleisVisibleListToDo, listTodos } = useListStorage();
 
     const toggleForm = () => {
         // Retrasa la acción de mostrar/ocultar el formulario
