@@ -37,7 +37,7 @@ const MostrarTodo: FC<todosList> = (todo) => {
                         />
                         {todo.title}
                     </label> */}
-                    <div
+                    <div className="titletodo-text"
                         onClick={() => toggleTodoUnique(todo.id, todo.typeTodo)}
                     >
                         {todo.title}
@@ -100,7 +100,9 @@ const MostrarToDos: FC<todosProps> = ({ todos }) => {
 
 
 export const Listtodo = () => {
-    const { totalTodosPending, totalTodosFinished, isVisibleListTodo, toggleisVisibleListToDo, listTodos } = useListStorage();
+    const { totalTodosPending, totalTodosFinished, isVisibleListTodo, toggleisVisibleListToDo, listTodos, todosPending,
+        todosFinished } = useListStorage();
+    const [listTodoView, setListTodoView] = useState(0)
 
     const toggleForm = () => {
         // Retrasa la acción de mostrar/ocultar el formulario
@@ -129,12 +131,22 @@ export const Listtodo = () => {
                     ? (
                         <div className="listtodos">
                             <article className="list-alltodos">
-                                <MostrarToDos todos={listTodos} />
+                                {/*Mostrar lista de todos conforme a variable de estado: todos, pendientes, terminados.*/ }
+                                {
+                                    (listTodoView === 0) && <MostrarToDos todos={listTodos} />
+                                }
+                                {
+                                    (listTodoView === 1) && <MostrarToDos todos={todosPending} />
+                                }
+                                {
+                                    (listTodoView === 2) && <MostrarToDos todos={todosFinished} />
+                                }
+                                
                             </article>
                             <article className="todos-totales">
-                                <h4 onClick={() => alert('Todos')}>Total de Todos: <span>{totalTodosPending + totalTodosFinished}</span></h4>
-                                <p onClick={() => alert('Pendientes')}>Pendientes: <span>{totalTodosPending}</span> </p>
-                                <p onClick={() => alert('Terminados')}>Terminados: <span>{ totalTodosFinished}</span></p>
+                                <h4 className="title_total" onClick={() => setListTodoView(0)}>Total de Todos: <span>{totalTodosPending + totalTodosFinished}</span></h4>
+                                <p  className="title_pending" onClick={() => setListTodoView(1)}>Pendientes: <span>{totalTodosPending}</span> </p>
+                                <p  className="title_finished" onClick={() => setListTodoView(2)}>Terminados: <span>{ totalTodosFinished}</span></p>
                             </article>
                             {/* <article className="listtodos_activos">
                                 <h3>To-Dos Pendientes  <span>{todosPending.length}</span></h3>

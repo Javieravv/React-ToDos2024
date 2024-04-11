@@ -111,6 +111,10 @@ section {
             justify-content: space-between;
             cursor: pointer;
 
+            .titletodo-text {
+                flex: 1;
+            }
+
             label {
                 display: flex;
                 gap: 10px;
@@ -174,14 +178,45 @@ section {
 }
 
 .todos-totales {
-    padding: 2px 10%;
-    display: flex;
-    justify-content: space-between;
+    padding: 2px 1%;
+    display: grid;
+    grid-template-columns: 1fr;
+    // justify-content: space-between;
     gap: 10px;
     cursor: pointer;
 
     > * {
         display: flex;
         gap: 15px;
+        padding: 10px 5px;
+        border-radius: 5px;
     }
+
+    .title_total {
+        border: 2px goldenrod solid;
+        &:hover {
+            background-color: goldenrod;
+        }
+    }
+
+    .title_pending {
+        border: var(--border-TodoPending);
+        &:hover {
+            background-color: var(--colorbg-TodosPending);
+        }
+    }
+
+    .title_finished {
+        border: var(--border-TodoFinished);
+        &:hover {
+            background-color: var(--colorbg-TodosFinished);
+        }
+    }
+
+    @media (width > calc($widthMobile + 200px)) {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 5px;
+    }
+
+
 }

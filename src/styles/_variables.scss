@@ -19,9 +19,10 @@ $colorBacground: white;
     --bgColorToastify: rgb(53, 124, 195);
     --bgTextToastify: black;
     --color-iconoarrow: var(--color-header);
-    // --border-TodoPending:  3px solid rgb(104, 8, 24);
-    --border-TodoPending: 3px dashed rgba(190, 28, 28, 0.859);
-    --border-TodoFinished: 3px solid rgb(21, 59, 21);
+    --colorbg-TodosPending: rgba(190, 28, 28, 0.859);
+    --colorbg-TodosFinished:  rgb(21, 59, 21);
+    --border-TodoPending: 3px dashed var(--colorbg-TodosPending);
+    --border-TodoFinished: 3px solid var(--colorbg-TodosFinished);
     background-color: white;
     color: black;
 }
@@ -34,8 +35,10 @@ $colorBacground: white;
     --bgColorToastify: rgba(1, 0, 47, 0.825);
     --bgTextToastify: white;
     --color-iconoarrow: rgba(22, 114, 184, 0.815);
-    --border-TodoPending: 2px dashed rgba(190, 28, 28, 0.859);
-    --border-TodoFinished: 2px solid rgb(67, 142, 67);
+    --colorbg-TodosPending: rgba(190, 28, 28, 0.859);
+    --colorbg-TodosFinished: rgb(132, 209, 132);
+    --border-TodoPending: 2px dashed var(--colorbg-TodosPending);
+    --border-TodoFinished: 2px solid var(--colorbg-TodosFinished);
     background-color: rgba(5, 5, 5, 0.943);
     color: white;
 }
