@@ -6,6 +6,7 @@ import avatarImg from '../assets/AvatarJavv.webp';
 
 export const Header = () => {
     const { login, isAuthenticated, user, logout } = useKindeAuth();
+    console.log('VARIABLE DE ENTORNO import.meta.env.VITE_REACT_APP_REDIRECTURI', import.meta.env.VITE_REACT_APP_REDIRECTURI);
     return (
         <header className="header">
             <nav>
