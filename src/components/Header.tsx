@@ -1,4 +1,4 @@
-import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+import { useKindeAuth,  } from "@kinde-oss/kinde-auth-react";
 
 import { Theme } from "./Theme"
 import avatarImg from '../assets/AvatarJavv.webp';
@@ -6,9 +6,6 @@ import avatarImg from '../assets/AvatarJavv.webp';
 
 export const Header = () => {
     const { login, isAuthenticated, user, logout } = useKindeAuth();
-    console.log('AUTENTIDADO: ', isAuthenticated);
-    console.log('USUARIO ', user)
-
     return (
         <header className="header">
             <nav>

@@ -3,9 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { toast, ToastContainer } from "react-toastify";
 import { MdArrowDownward, MdArrowUpward } from "react-icons/md";
 import { useInputStorage } from './hooks.ts/useInputStorage'; // custom hook 
+import { useKindeAuth } from '@kinde-oss/kinde-auth-react'
 
 export const InputTodo = () => {
     const inputTitleTodo = useRef<HTMLInputElement | null>(null);
+    const { user } = useKindeAuth()
 
     const { todoItem, title, description, changeTitleItem, 
         changeDescriptionItem, initializeItem, 
@@ -13,7 +15,7 @@ export const InputTodo = () => {
 
     const handleClickTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault()
-        addTodo({title: title,stateTodo: false,typeTodo: 'Pending',id: uuidv4(),description: description}, 'Pending')
+        addTodo({title: title,stateTodo: false,typeTodo: 'Pending',id: uuidv4(), description: description, userId: user?.id || ''}, 'Pending')
         toast.success('To-Do Agregado de manera exitosa.')
         initializeItem('', '', false, '');
         inputTitleTodo.current?.focus();

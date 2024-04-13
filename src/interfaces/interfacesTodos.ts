@@ -6,6 +6,7 @@ export interface todosList {
     description?: string;
     stateTodo: boolean;
     typeTodo: TypeTodo;
+    userId:string;
 }
 
 export interface todosProps {
