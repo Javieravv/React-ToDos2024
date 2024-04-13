@@ -9,10 +9,15 @@ import { App } from './App'
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <KindeProvider
-            clientId="030ac841e52e461283cef708c918adb4"
-            domain="https://xavierinc.kinde.com"
-            redirectUri="http://localhost:5173"
-            logoutUri="http://localhost:5173"
+            // clientId="030ac841e52e461283cef708c918adb4"
+            // domain="https://xavierinc.kinde.com"
+            // redirectUri="http://localhost:5173"
+            // logoutUri="http://localhost:5173"
+
+            clientId={import.meta.env.VITE_REACT_APP_CLIENTID}
+            domain={import.meta.env.VITE_REACT_APP_DOMAIN}
+            redirectUri={import.meta.env.VITE_REACT_APP_REDIRECTURI}
+            logoutUri={import.meta.env.VITE_REACT_APP_LOGOUTURI}
         >
             <App />
         </KindeProvider>
