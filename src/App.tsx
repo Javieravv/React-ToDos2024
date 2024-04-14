@@ -4,15 +4,15 @@ import { Footer, Header, InputTodo, Listtodo } from './components';
 
 
 export const App = () => {
-
-    const { user } = useKindeAuth()
+    const { user } = useKindeAuth();
     useEffect(() => {
-        console.log('EL USUARIO HA CAMBIADO....', user)
-        if (user) {
-            localStorage.setItem('user-todo', user.id || '')
-        } else { localStorage.setItem('user-todo', '') }
+      console.log('EL USUARIO HA CAMBIADO.....')
+      if (user) {
+        console.log('SE CAMBIÓ EL ID DEL USUARIO ')
+          localStorage.setItem('user-todo', user.id || 'indefinido')
+      }
     }, [user])
-
+    
     return (
         <>
             <Header />
@@ -25,6 +25,10 @@ export const App = () => {
                         </>
                     )
                     : (<>
+                        {
+                            // console.log('RECUPERAMOS DATOS DEL USUARIO...', user.id)
+                            localStorage.setItem('user-todo', user.id || '123')
+                        }
                         <InputTodo />
                         <Listtodo />
                     </>)

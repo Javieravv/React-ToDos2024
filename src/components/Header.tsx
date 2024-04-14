@@ -1,12 +1,21 @@
-import { useKindeAuth,  } from "@kinde-oss/kinde-auth-react";
-
+import { useKindeAuth, } from "@kinde-oss/kinde-auth-react";
 import { Theme } from "./Theme"
 import avatarImg from '../assets/AvatarJavv.webp';
 
 
 export const Header = () => {
     const { login, isAuthenticated, user, logout } = useKindeAuth();
-    console.log('VARIABLE DE ENTORNO import.meta.env.VITE_REACT_APP_REDIRECTURI', import.meta.env.VITE_REACT_APP_REDIRECTURI);
+
+    const todoLogin = () => {
+        login()
+        console.log('ENTRANDO....')
+    }
+
+    const todoLogout = () => {
+        logout();
+        localStorage.setItem('user-todo', '');
+    }
+
     return (
         <header className="header">
             <nav>
@@ -27,10 +36,10 @@ export const Header = () => {
                     {
                         (isAuthenticated)
                             ? (
-                                <button className="btn-authenticate" onClick={() => logout()} >Logout</button>
+                                <button className="btn-authenticate" onClick={() => todoLogout()} >Logout</button>
                             )
                             : (
-                                <button className="btn-authenticate" onClick={() => login()} >Log In</button>
+                                <button className="btn-authenticate" onClick={() => todoLogin()} >Log In</button>
                             )
                     }
                     <Theme />

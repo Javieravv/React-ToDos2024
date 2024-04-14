@@ -4,6 +4,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { MdArrowDownward, MdArrowUpward } from "react-icons/md";
 import { useInputStorage } from './hooks.ts/useInputStorage'; // custom hook 
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react'
+import { todosList } from "../interfaces/interfacesTodos";
+import { updateTodo } from "../db/fetchData";
 
 export const InputTodo = () => {
     const inputTitleTodo = useRef<HTMLInputElement | null>(null);
@@ -13,9 +15,26 @@ export const InputTodo = () => {
         changeDescriptionItem, initializeItem, 
         addTodo, editDataTodo, isVisibleForm, toggleisVisibleFormToDo } = useInputStorage()
 
-    const handleClickTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    const handleAddTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault()
-        addTodo({title: title,stateTodo: false,typeTodo: 'Pending',id: uuidv4(), description: description, userId: user?.id || ''}, 'Pending')
+
+        const itemTodo: todosList = {
+            title: title,
+            stateTodo: false,
+            typeTodo: 'Pending',
+            id: uuidv4(), 
+            description: description, 
+            userId: user?.id || ''
+        }
+        const userActive = localStorage.getItem('user-todo') || '';
+
+        try {
+            updateTodo(userActive, itemTodo)
+            addTodo(itemTodo, 'Pending')
+        } catch (error) {
+            throw new Error('Se presentó un error....')
+        }
+
         toast.success('To-Do Agregado de manera exitosa.')
         initializeItem('', '', false, '');
         inputTitleTodo.current?.focus();
@@ -93,7 +112,7 @@ export const InputTodo = () => {
                                             type="submit"
                                             value="Agregar To-Do"
                                             disabled={!(title.trim().length > 0)}
-                                            onClick={handleClickTodo}
+                                            onClick={handleAddTodo}
                                         />)
                                         : (<input
                                             className='formtodo_submit'

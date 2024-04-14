@@ -1,7 +1,8 @@
 // Store para lostodos 
 import { create } from 'zustand'
 import { TypeTodo, todosList } from '../interfaces/interfacesTodos';
-import { createJSONStorage, devtools, persist, StateStorage  } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist, StateStorage } from 'zustand/middleware';
+import { fetchTodo, updateTodo, writeTodo } from '../db/fetchData';
 
 interface TodoState {
     listTodos: todosList[];
@@ -35,28 +36,29 @@ interface TodoState {
 /* Para recuperar la información del storage persistente conforme con el id del usuario
 que se autentica.**/
 const hashStorage: StateStorage = {
-    getItem: ()  => {
+    getItem: () => {
         // recuperamos el usuario activo y con él recuperamos los todos que hay en la base de datos.
-        const userActive = localStorage.getItem('user-todo');
-        const tempStorage = JSON.parse(localStorage.getItem('tasks-javv-1') || '');
-        console.log('USER ACTIVE ', userActive)
-        // const userActive = localStorage.getItem('user-todo');
-        // const tempList = tempStorage.listTodos;
-        // let arrayTemp;
-        // if (typeof tempStorage === 'object') {
-        //     arrayTemp = tempStorage.state.listTodos.filter ( item => item.userId === userActive);
-        // }
-        // const tempStorage = JSON.parse(localStorage.getItem('tasks-javv-1') || '');
+        const userActive = localStorage.getItem('user-todo') || '';
+        let tempStorage;
+        fetchTodo(userActive).then((todoData) => {
+            console.log('LA DATA QUE LLEGÓ ES ', todoData)
+            tempStorage = JSON.parse(localStorage.getItem('tasks-javv-1') || '');
+            console.log('LOCAL STORAGE RECUPERADO ES ', tempStorage);
+            tempStorage.state.listTodos = todoData
+        });
+        console.log('LOS DATOS DEL STORAGE SON ', tempStorage)
+        return JSON.stringify(tempStorage);
+        // let dataTodos = null;
+        // tempStorage.state.listTodos = dataTodos;
         // console.log('RESULTADOS FINALES...', arrayTemp)
         // tempStorage.state.listTodos = arrayTemp;
-        return JSON.stringify(tempStorage);
     },
     setItem: (key, newValue) => {
-        console.log('PASAMOS POR SET ITEM key...', key, newValue)
+        // console.log('PASAMOS POR SET ITEM key...', key, newValue)
         localStorage.setItem(key, newValue)
     },
     removeItem: () => {
-        console.log('PASAMOS POR REMOVE  ITEM...')
+        // console.log('PASAMOS POR REMOVE  ITEM...')
     }
 }
 
