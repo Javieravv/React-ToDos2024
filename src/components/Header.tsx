@@ -1,19 +1,25 @@
 import { useKindeAuth, } from "@kinde-oss/kinde-auth-react";
 import { Theme } from "./Theme"
 import avatarImg from '../assets/AvatarJavv.webp';
+import { useUserStore } from "../store/user.store";
+import { useTodosStore } from "../store/todos.store";
 
 
 export const Header = () => {
     const { login, isAuthenticated, user, logout } = useKindeAuth();
+    const { resetListTodos } = useTodosStore();
+    const { resetUser } = useUserStore()
 
-    const todoLogin = () => {
-        login()
-        console.log('ENTRANDO....')
+    const todoLogin = async () => {
+        await login()
     }
 
-    const todoLogout = () => {
-        logout();
+    const todoLogout = async () => {
+        resetUser();
+        resetListTodos();
+        localStorage.setItem('todo-user', '');
         localStorage.setItem('user-todo', '');
+        await logout();
     }
 
     return (

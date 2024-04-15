@@ -2,14 +2,13 @@ import { getDatabase, ref, onValue, set, update, push, get, child } from "fireba
 import app from "./firebaseConfig";
 import { todosList } from "../interfaces/interfacesTodos";
 
-export const fetchTodo = async (user: string) => {
-    console.log('RECUPERAMOS DATOS DEL USUARIO ', user)
+export const fetchTodo = async (user: string = ''):Promise<todosList[] | []> => {
     const db = getDatabase(); // Assuming you have 'getDatabase' defined
     const userRef = ref(db, user); // Reference to the user node
     try {
         const snapshot = await get(userRef); // Use 'await' for async function
         if (snapshot.exists()) {
-            const dataValue = Object.values(snapshot.val()); // Access data after retrieval
+            const dataValue: todosList[] = Object.values(snapshot.val()); // Access data after retrieval
             return dataValue; // Return the data
         } else {
             console.log("No data available for user:", user);

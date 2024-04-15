@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { TypeTodo, todosList } from '../interfaces/interfacesTodos';
 import { createJSONStorage, devtools, persist, StateStorage } from 'zustand/middleware';
 import { fetchTodo, updateTodo, writeTodo } from '../db/fetchData';
+import { useUserStore } from './user.store';
 
 interface TodoState {
     listTodos: todosList[];
@@ -14,6 +15,8 @@ interface TodoState {
     isVisibleFormToDo: boolean;
     isVisibleListToDo: boolean;
 
+    setListTodos: (listTodos: todosList[]) => void;
+    resetListTodos:() => void;
     getThemeTodos: () => string;
     changeTheme: (controlTheme: boolean) => void;
     changeStateAllTodos: (stateTodo: boolean, typeTodo: TypeTodo) => void;
@@ -35,32 +38,18 @@ interface TodoState {
 
 /* Para recuperar la información del storage persistente conforme con el id del usuario
 que se autentica.**/
-const hashStorage: StateStorage = {
-    getItem: () => {
-        // recuperamos el usuario activo y con él recuperamos los todos que hay en la base de datos.
-        const userActive = localStorage.getItem('user-todo') || '';
-        let tempStorage;
-        fetchTodo(userActive).then((todoData) => {
-            console.log('LA DATA QUE LLEGÓ ES ', todoData)
-            tempStorage = JSON.parse(localStorage.getItem('tasks-javv-1') || '');
-            console.log('LOCAL STORAGE RECUPERADO ES ', tempStorage);
-            tempStorage.state.listTodos = todoData
-        });
-        console.log('LOS DATOS DEL STORAGE SON ', tempStorage)
-        return JSON.stringify(tempStorage);
-        // let dataTodos = null;
-        // tempStorage.state.listTodos = dataTodos;
-        // console.log('RESULTADOS FINALES...', arrayTemp)
-        // tempStorage.state.listTodos = arrayTemp;
-    },
-    setItem: (key, newValue) => {
-        // console.log('PASAMOS POR SET ITEM key...', key, newValue)
-        localStorage.setItem(key, newValue)
-    },
-    removeItem: () => {
-        // console.log('PASAMOS POR REMOVE  ITEM...')
-    }
-}
+// const hashStorage: StateStorage = {
+//     getItem: () => {
+        
+//         // Se buscaba aquí cargar el estado con la información de la base de datos. Pero se hizo de otra forma.
+//         return null;
+//     },
+//     setItem: (key, newValue) => {
+//         localStorage.setItem(key, newValue)
+//     },
+//     removeItem: () => {
+//     }
+// }
 
 export const useTodosStore = create<TodoState>()(
     // Con la instrucción persist se guarda el store en localStore
@@ -75,6 +64,14 @@ export const useTodosStore = create<TodoState>()(
                 controlTodosFinished: false,
                 isVisibleFormToDo: true,
                 isVisibleListToDo: true,
+
+                setListTodos: (listTodos: todosList[] = []) => {
+                    set({ listTodos: listTodos })
+                },
+
+                resetListTodos:() => {
+                    set({ listTodos: [] })
+                },
                 // Devolver el tema de la aplicacion
                 getThemeTodos: () => {
                     return get().theme_todos;
@@ -203,7 +200,7 @@ export const useTodosStore = create<TodoState>()(
             }),
             {
                 name: 'tasks-javv-1',
-                storage: createJSONStorage(() => hashStorage),
+                // storage: createJSONStorage(() => hashStorage),
             }
         )
     )
