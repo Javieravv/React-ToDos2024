@@ -5,6 +5,7 @@ import { useUserStore } from './store/user.store';
 import { fetchTodo } from './db/fetchData';
 import { useTodosStore } from './store/todos.store';
 import { todosList, User } from './interfaces/interfacesTodos';
+import { Mainpage } from './components/mainpage';
 
 
 export const App = () => {
@@ -37,7 +38,7 @@ export const App = () => {
                     ? (
                         // TODO: Elaborar componente de bienvenida
                         <>
-                            <h1>No hay usuario Registrado....</h1>
+                            <Mainpage />
                         </>
                     )
                     : (<>

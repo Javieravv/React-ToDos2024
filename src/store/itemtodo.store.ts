@@ -5,7 +5,8 @@ import { todoItem } from '../interfaces/interfacesTodos';
 
 interface TodoItem {
     itemTodo: todoItem;
-    initializeItem: ( title: string, description: string, status: boolean, id?:string ) => void;
+    // initializeItem: ( title: string, description: string, status: boolean, id?:string ) => void;
+    initializeItem: (item: todoItem) => void;
     changeTitleItem: (value: string) => void;
     changeDescriptionItem: (value: string) => void;
     changeStatusItem: (value: boolean) => void;
@@ -19,33 +20,42 @@ export const useItemStore = create<TodoItem>()(
     devtools(
         persist(
             (set, get) => ({
-                itemTodo: { title: '', description: '', status: false },
+                itemTodo: {
+                    title: '',
+                    description: '',
+                    stateTodo: false,
+                    id: '',
+                    typeTodo: 'Pending',
+                    userId: '',
+                    routeItem: ''
+                },
 
-                initializeItem: (title: string, description: string, status: boolean, id?: string) => {
-                    set({ itemTodo: { title: title, description: description, status: status, id: id } })
+                // initializeItem: (title: string, description: string, status: boolean, id?: string) => {
+                initializeItem: (item: todoItem) => {
+                    set ({ itemTodo: item })
                 },
 
                 changeTitleItem: (value: string) => {
                     const todoTemp = get().itemTodo;
                     todoTemp.title = value;
-                    set( { itemTodo: todoTemp })
+                    set({ itemTodo: todoTemp })
                 },
 
                 changeDescriptionItem: (value: string) => {
                     const todoTemp = get().itemTodo;
                     todoTemp.description = value;
-                    set( { itemTodo: todoTemp })
+                    set({ itemTodo: todoTemp })
                 },
 
-                changeStatusItem: (value: boolean)=> {
+                changeStatusItem: (value: boolean) => {
                     const todoTemp = get().itemTodo;
-                    todoTemp.status = value;
-                    set( { itemTodo: todoTemp })
+                    todoTemp.stateTodo = value;
+                    set({ itemTodo: todoTemp })
                 },
 
-                getTodoTitle: () => { return get().itemTodo.title },
+                getTodoTitle:       () => { return get().itemTodo.title },
                 getTodoDescription: () => { return get().itemTodo.description },
-                getTodo:() => { return get().itemTodo }
+                getTodo: () => { return get().itemTodo }
 
             }), { name: 'todo-item' }
         )

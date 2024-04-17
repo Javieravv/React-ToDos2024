@@ -2,13 +2,13 @@
 
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
-  apiKey: "AIzaSyA-lnkB3BXBlO2wNE2o-A9WN7CCtlIgSPo",
-  authDomain: "todosjavv.firebaseapp.com",
-  databaseURL: "https://todosjavv-default-rtdb.firebaseio.com",
-  projectId: "todosjavv",
-  storageBucket: "todosjavv.appspot.com",
-  messagingSenderId: "969358434948",
-  appId: "1:969358434948:web:abe348d9086972d10058d1"
+  apiKey              : import.meta.env.VITE_REACT_APP_APIKEY,
+  authDomain          : import.meta.env.VITE_REACT_APP_AUTHDOMAIN,
+  databaseURL         : import.meta.env.VITE_REACT_APP_DATABASEURL,
+  projectId           : import.meta.env.VITE_REACT_APP_PROJECTID,
+  storageBucket       : import.meta.env.VITE_REACT_APP_STORAGEBUCKET,
+  messagingSenderId   : import.meta.env.VITE_REACT_APP_MESSAGINGSENDERID,
+  appId               : import.meta.env.VITE_REACT_APP_APPID
 };
 
 const app = initializeApp(firebaseConfig);

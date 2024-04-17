@@ -10,6 +10,7 @@ $size-themeoption: calc($height-theme - 7px);
     height: $height-theme;
     border-radius: $height-theme;
     position: relative;
+    margin: 0;
 
     .theme_imgs {
         position: absolute;
@@ -70,5 +71,4 @@ $size-themeoption: calc($height-theme - 7px);
             $display_light: none;
         }
     }
-    
 }

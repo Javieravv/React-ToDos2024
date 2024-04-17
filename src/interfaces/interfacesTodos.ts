@@ -1,12 +1,13 @@
 export type TypeTodo = 'Pending' | 'Completed';
 
 export interface todosList {
-    id: string;
-    title: string;
-    description?: string;
-    stateTodo: boolean;
-    typeTodo: TypeTodo;
-    userId:string;
+    description? : string;
+    id           : string;
+    route?       : string;
+    stateTodo    : boolean;
+    title        : string;
+    typeTodo     : TypeTodo;
+    userId       : string;
 }
 
 export interface todosProps {
@@ -14,10 +15,13 @@ export interface todosProps {
 }
 
 export interface todoItem {
-    title: string;
-    description: string;
-    status: boolean;
-    id?: string;
+    description  : string;
+    id           : string;
+    routeItem?   : string;
+    stateTodo    : boolean;
+    title        : string;
+    typeTodo     : TypeTodo;
+    userId       : string;
 }
 
 export interface User {

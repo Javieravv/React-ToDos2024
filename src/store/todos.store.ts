@@ -7,13 +7,13 @@ import { useUserStore } from './user.store';
 
 interface TodoState {
     listTodos: todosList[];
-    inputTodo: string;
-    theme_todos: string;
-    controlThemeTodos: boolean;
-    controlTodosPending: boolean;
-    controlTodosFinished: boolean;
-    isVisibleFormToDo: boolean;
-    isVisibleListToDo: boolean;
+    inputTodo             : string;
+    theme_todos           : string;
+    controlThemeTodos     : boolean;
+    controlTodosPending   : boolean;
+    controlTodosFinished  : boolean;
+    isVisibleFormToDo     : boolean;
+    isVisibleListToDo     : boolean;
 
     setListTodos: (listTodos: todosList[]) => void;
     resetListTodos:() => void;
@@ -177,7 +177,6 @@ export const useTodosStore = create<TodoState>()(
                         }
                         return todo;
                     })
-
                     set({ listTodos: [...todosTemp] });
                 },
 
