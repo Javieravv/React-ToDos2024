@@ -1,18 +1,15 @@
-// // Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
-// // TODO: Add SDKs for Firebase products that you want to use
-// // https://firebase.google.com/docs/web/setup#available-libraries
+// Import the functions you need from the SDKs you need
 
-// // Your web app's Firebase configuration
-// const firebaseConfig = {
-//   apiKey: "AIzaSyA-lnkB3BXBlO2wNE2o-A9WN7CCtlIgSPo",
-//   authDomain: "todosjavv.firebaseapp.com",
-//   databaseURL: "https://todosjavv-default-rtdb.firebaseio.com",
-//   projectId: "todosjavv",
-//   storageBucket: "todosjavv.appspot.com",
-//   messagingSenderId: "969358434948",
-//   appId: "1:969358434948:web:abe348d9086972d10058d1"
-// };
+import { initializeApp } from "firebase/app";
+const firebaseConfig = {
+  apiKey              : import.meta.env.VITE_REACT_APP_APIKEY,
+  authDomain          : import.meta.env.VITE_REACT_APP_AUTHDOMAIN,
+  databaseURL         : import.meta.env.VITE_REACT_APP_DATABASEURL,
+  projectId           : import.meta.env.VITE_REACT_APP_PROJECTID,
+  storageBucket       : import.meta.env.VITE_REACT_APP_STORAGEBUCKET,
+  messagingSenderId   : import.meta.env.VITE_REACT_APP_MESSAGINGSENDERID,
+  appId               : import.meta.env.VITE_REACT_APP_APPID
+};
 
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+export default app;

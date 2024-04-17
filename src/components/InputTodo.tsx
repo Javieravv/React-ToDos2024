@@ -4,6 +4,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { MdArrowDownward, MdArrowUpward } from "react-icons/md";
 import { useInputStorage } from './hooks.ts/useInputStorage'; // custom hook 
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react'
+import { todosList } from "../interfaces/interfacesTodos";
+import { updateTodo } from "../db/fetchData";
 
 export const InputTodo = () => {
     const inputTitleTodo = useRef<HTMLInputElement | null>(null);
@@ -13,19 +15,55 @@ export const InputTodo = () => {
         changeDescriptionItem, initializeItem, 
         addTodo, editDataTodo, isVisibleForm, toggleisVisibleFormToDo } = useInputStorage()
 
-    const handleClickTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    const handleAddTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault()
-        addTodo({title: title,stateTodo: false,typeTodo: 'Pending',id: uuidv4(), description: description, userId: user?.id || ''}, 'Pending')
+
+        const itemTodo: todosList = {
+            title: title,
+            stateTodo: true,
+            typeTodo: 'Pending',
+            id: uuidv4(), 
+            description: description, 
+            userId: user?.id || ''
+        }
+        // const userActive = localStorage.getItem('user-todo') || '';
+
+        try {
+            updateTodo(`${itemTodo.userId}/${itemTodo.id}`, itemTodo)
+        } catch (error) {
+            throw new Error('Se presentó un error....')
+            // return false
+        }
+        addTodo(itemTodo, 'Pending')
         toast.success('To-Do Agregado de manera exitosa.')
-        initializeItem('', '', false, '');
+        initializeItem({title: '', id: '', stateTodo: false, userId: '', routeItem: '', description: '', typeTodo: 'Pending'});
         inputTitleTodo.current?.focus();
     }
 
     const handleEditTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault()
+        const itemEditTodo: todosList = {
+            title: title,
+            stateTodo: todoItem.stateTodo,
+            typeTodo: todoItem.typeTodo,
+            id: todoItem.id, 
+            description: description, 
+            userId: todoItem.userId, 
+        }
+        // const userActive = localStorage.getItem('user-todo') || '';
+
+        try {
+            updateTodo(`${todoItem.userId}/${todoItem.id}`, itemEditTodo)
+            .then(() => { console.log('TODO MODIFICADO....') })
+        } catch (error) {
+            throw new Error('Se presentó un error al modificar el todo....')
+            // return false
+        }
+
+
         editDataTodo(todoItem.id!, title, description)
         toast.success('To-Do modificado  de manera exitosa.')
-        initializeItem('', '', false, '');
+        initializeItem({title: '', id: '', stateTodo: false, userId: '', routeItem: '', description: '', typeTodo: 'Pending'});
         inputTitleTodo.current?.focus();
     }
 
@@ -87,13 +125,13 @@ export const InputTodo = () => {
                                         </textarea>
                                     </div>
 
-                                    {(!todoItem.status)
+                                    {(!todoItem.stateTodo)
                                         ? (<input
                                             className='formtodo_submit'
                                             type="submit"
                                             value="Agregar To-Do"
                                             disabled={!(title.trim().length > 0)}
-                                            onClick={handleClickTodo}
+                                            onClick={handleAddTodo}
                                         />)
                                         : (<input
                                             className='formtodo_submit'

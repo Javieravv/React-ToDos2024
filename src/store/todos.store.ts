@@ -1,18 +1,22 @@
 // Store para lostodos 
 import { create } from 'zustand'
 import { TypeTodo, todosList } from '../interfaces/interfacesTodos';
-import { createJSONStorage, devtools, persist, StateStorage  } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist, StateStorage } from 'zustand/middleware';
+import { fetchTodo, updateTodo, writeTodo } from '../db/fetchData';
+import { useUserStore } from './user.store';
 
 interface TodoState {
     listTodos: todosList[];
-    inputTodo: string;
-    theme_todos: string;
-    controlThemeTodos: boolean;
-    controlTodosPending: boolean;
-    controlTodosFinished: boolean;
-    isVisibleFormToDo: boolean;
-    isVisibleListToDo: boolean;
+    inputTodo             : string;
+    theme_todos           : string;
+    controlThemeTodos     : boolean;
+    controlTodosPending   : boolean;
+    controlTodosFinished  : boolean;
+    isVisibleFormToDo     : boolean;
+    isVisibleListToDo     : boolean;
 
+    setListTodos: (listTodos: todosList[]) => void;
+    resetListTodos:() => void;
     getThemeTodos: () => string;
     changeTheme: (controlTheme: boolean) => void;
     changeStateAllTodos: (stateTodo: boolean, typeTodo: TypeTodo) => void;
@@ -34,31 +38,18 @@ interface TodoState {
 
 /* Para recuperar la información del storage persistente conforme con el id del usuario
 que se autentica.**/
-const hashStorage: StateStorage = {
-    getItem: ()  => {
-        // recuperamos el usuario activo y con él recuperamos los todos que hay en la base de datos.
-        const userActive = localStorage.getItem('user-todo');
-        const tempStorage = JSON.parse(localStorage.getItem('tasks-javv-1') || '');
-        console.log('USER ACTIVE ', userActive)
-        // const userActive = localStorage.getItem('user-todo');
-        // const tempList = tempStorage.listTodos;
-        // let arrayTemp;
-        // if (typeof tempStorage === 'object') {
-        //     arrayTemp = tempStorage.state.listTodos.filter ( item => item.userId === userActive);
-        // }
-        // const tempStorage = JSON.parse(localStorage.getItem('tasks-javv-1') || '');
-        // console.log('RESULTADOS FINALES...', arrayTemp)
-        // tempStorage.state.listTodos = arrayTemp;
-        return JSON.stringify(tempStorage);
-    },
-    setItem: (key, newValue) => {
-        console.log('PASAMOS POR SET ITEM key...', key, newValue)
-        localStorage.setItem(key, newValue)
-    },
-    removeItem: () => {
-        console.log('PASAMOS POR REMOVE  ITEM...')
-    }
-}
+// const hashStorage: StateStorage = {
+//     getItem: () => {
+        
+//         // Se buscaba aquí cargar el estado con la información de la base de datos. Pero se hizo de otra forma.
+//         return null;
+//     },
+//     setItem: (key, newValue) => {
+//         localStorage.setItem(key, newValue)
+//     },
+//     removeItem: () => {
+//     }
+// }
 
 export const useTodosStore = create<TodoState>()(
     // Con la instrucción persist se guarda el store en localStore
@@ -73,6 +64,14 @@ export const useTodosStore = create<TodoState>()(
                 controlTodosFinished: false,
                 isVisibleFormToDo: true,
                 isVisibleListToDo: true,
+
+                setListTodos: (listTodos: todosList[] = []) => {
+                    set({ listTodos: listTodos })
+                },
+
+                resetListTodos:() => {
+                    set({ listTodos: [] })
+                },
                 // Devolver el tema de la aplicacion
                 getThemeTodos: () => {
                     return get().theme_todos;
@@ -178,7 +177,6 @@ export const useTodosStore = create<TodoState>()(
                         }
                         return todo;
                     })
-
                     set({ listTodos: [...todosTemp] });
                 },
 
@@ -201,7 +199,7 @@ export const useTodosStore = create<TodoState>()(
             }),
             {
                 name: 'tasks-javv-1',
-                storage: createJSONStorage(() => hashStorage),
+                // storage: createJSONStorage(() => hashStorage),
             }
         )
     )

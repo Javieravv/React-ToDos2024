@@ -13,6 +13,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             domain={import.meta.env.VITE_REACT_APP_DOMAIN}
             redirectUri={import.meta.env.VITE_REACT_APP_REDIRECTURI}
             logoutUri={import.meta.env.VITE_REACT_APP_LOGOUTURI}
+            onRedirectCallback={(user, app_state) => {
+                // console.log ('******- ENTRAMOS A LA APP ******');
+            }}
+            
         >
             <App />
         </KindeProvider>

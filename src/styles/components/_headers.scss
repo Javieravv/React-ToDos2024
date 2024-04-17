@@ -5,7 +5,7 @@
         width: 98%;
         max-width: $max-width;
         margin: 0 auto;
-        padding: 15px 15px;
+        padding: 15px 0px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -18,7 +18,7 @@
         .menu {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .username {

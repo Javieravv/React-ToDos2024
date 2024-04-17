@@ -1,9 +1,12 @@
 // Componente para las listas de todos
 import { FC, useState } from "react";
-import { todosList, todosProps } from "../interfaces/interfacesTodos";
+import { todosList, todosProps, TypeTodo } from '../interfaces/interfacesTodos';
 import { MdArrowDownward, MdArrowUpward, MdDelete, MdModeEditOutline } from "react-icons/md";
 import { IoIosArrowForward, IoIosArrowUp } from "react-icons/io";
 import { useListStorage } from "./hooks.ts/useListStorage";
+import { removeTodo, updateTodo } from "../db/fetchData";
+import { TodosCompletedEmpthy, Todosempthy, TodosPendingEmpty } from "./mainpage";
+import { toast } from "react-toastify";
 
 const MostrarTodo: FC<todosList> = (todo) => {
     const [viewDescription, setViewDescription] = useState(false)
@@ -11,34 +14,42 @@ const MostrarTodo: FC<todosList> = (todo) => {
 
     const handleEditTodo = (e: React.MouseEvent) => {
         e.preventDefault();
-        initializeItem(todo.title, todo.description ?? '', true, todo.id)
+        // initializeItem(todo.title, todo.description ?? '', true, todo.id)
+        initializeItem({ description: todo.description || '', title: todo.title, id: todo.id, stateTodo: todo.stateTodo, typeTodo: todo.typeTodo, userId: todo.userId, routeItem: todo.route })
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return false;
     }
 
+    // Cambiamos el estado del todo: pending a completed o vs.
+    const handleToggleTodoUnique = () => {
+        const typeTodoTemp: TypeTodo = todo.typeTodo;
+        const todoTemp: todosList = { ...todo };
+        todoTemp.typeTodo = (typeTodoTemp === 'Pending') ? 'Completed' : 'Pending';
+        updateTodo(`${todo.userId}/${todo.id}`, todoTemp)
+            .then(() => {
+                toggleTodoUnique(todo.id, typeTodoTemp)
+            });
+    }
+
+    // Eliminamos el todo
+    const handleDeleteTodo = () => {
+        removeTodo(`${todo.userId}/${todo.id}`)
+            .then(() => {
+                console.log('Todo removido con éxito...')
+                deleteTodo(todo.id)
+                toast.error('To-Do eliminado de manera exitosa.')
+            })
+    }
+
     return (
         <>
-            <li 
+            <li
                 key={todo.id}
-                className={ `${(todo.typeTodo === 'Completed') ? 'todo-finished' : 'todo-pending'}`  }
+                className={`${(todo.typeTodo === 'Completed') ? 'todo-finished' : 'todo-pending'}`}
             >
                 <div className="titletodo">
-                    {/* <label
-                        htmlFor={`todopendiente-${todo.id}`}
-                    >
-                        <input
-                            type="checkbox"
-                            name={`todopendiente-${todo.title}`}
-                            id={`todopendiente-${todo.id}`}
-                            checked={todo.stateTodo}
-                            onChange={() => {
-                                changeStatusTodo(todo.id)
-                            }}
-                        />
-                        {todo.title}
-                    </label> */}
                     <div className="titletodo-text"
-                        onClick={() => toggleTodoUnique(todo.id, todo.typeTodo)}
+                        onClick={() => handleToggleTodoUnique()}
                     >
                         {todo.title}
                     </div>
@@ -58,7 +69,7 @@ const MostrarTodo: FC<todosList> = (todo) => {
                         </div>
                         <div
                             className="iconodelete"
-                            onClick={() => deleteTodo(todo.id)}
+                            onClick={() => handleDeleteTodo()}
                         >
                             <MdDelete className="svgIconDelete" />
                         </div>
@@ -111,6 +122,10 @@ export const Listtodo = () => {
         }, 200); // 200 milisegundos de retraso
     };
 
+    if (listTodos.length === 0) {
+        return (<Todosempthy />)
+    }
+
     return (
         <section>
             {
@@ -131,74 +146,27 @@ export const Listtodo = () => {
                     ? (
                         <div className="listtodos">
                             <article className="list-alltodos">
-                                {/*Mostrar lista de todos conforme a variable de estado: todos, pendientes, terminados.*/ }
+                                {/*Mostrar lista de todos conforme a variable de estado: todos, pendientes, terminados.*/}
                                 {
                                     (listTodoView === 0) && <MostrarToDos todos={listTodos} />
                                 }
                                 {
-                                    (listTodoView === 1) && <MostrarToDos todos={todosPending} />
+                                    (listTodoView === 1) && (
+                                        todosPending.length === 0 ? <TodosPendingEmpty /> : <MostrarToDos todos={todosPending} />
+                                    )
                                 }
                                 {
-                                    (listTodoView === 2) && <MostrarToDos todos={todosFinished} />
+                                    (listTodoView === 2) && (
+                                        todosFinished.length === 0 ? <TodosCompletedEmpthy /> : <MostrarToDos todos={todosFinished} />
+                                    )
                                 }
-                                
+
                             </article>
                             <article className="todos-totales">
                                 <h4 className="title_total" onClick={() => setListTodoView(0)}>Total de Todos: <span>{totalTodosPending + totalTodosFinished}</span></h4>
-                                <p  className="title_pending" onClick={() => setListTodoView(1)}>Pendientes: <span>{totalTodosPending}</span> </p>
-                                <p  className="title_finished" onClick={() => setListTodoView(2)}>Terminados: <span>{ totalTodosFinished}</span></p>
+                                <p className="title_pending" onClick={() => setListTodoView(1)}>Pendientes: <span>{totalTodosPending}</span> </p>
+                                <p className="title_finished" onClick={() => setListTodoView(2)}>Terminados: <span>{totalTodosFinished}</span></p>
                             </article>
-                            {/* <article className="listtodos_activos">
-                                <h3>To-Dos Pendientes  <span>{todosPending.length}</span></h3>
-                                <div className="listtodos_menu">
-                                    <label className="todopendientesall" htmlFor="todopendientesall">
-                                        <input
-                                            type="checkbox"
-                                            name="todopendientesall"
-                                            id="todopendientesall"
-                                            checked={controlTodosPending}
-                                            onChange={() => {
-                                                changeControlTodos(!controlTodosPending, 'Pending');
-                                                changeStateAllTodos(!controlTodosPending, 'Pending');
-                                            }}
-                                        />
-                                        Marcar todos
-                                    </label>
-                                    <button
-                                        className='listtodos_btn'
-                                        disabled={!(totalTodosPending > 0)}
-                                        onClick={() => toggleTodos('Pending', 'Completed')}
-                                    >Pasar a Terminados
-                                    </button>
-                                </div>
-                                <MostrarToDos todos={todosPending} />
-                            </article>
-                            <article className="listtodos_terminados">
-                                <h3>To-Dos Terminados <span>{todosFinished.length}</span> </h3>
-                                <div className="listtodos_menu">
-                                    <label className="todoterminadosall" htmlFor="todoterminadosall">
-                                        <input
-                                            type="checkbox"
-                                            name="todoterminadosall"
-                                            id="todoterminadosall"
-                                            checked={controlTodosFinished}
-                                            onChange={() => {
-                                                changeControlTodos(!controlTodosFinished, 'Completed')
-                                                changeStateAllTodos(!controlTodosFinished, 'Completed');
-                                            }}
-                                        />
-                                        Marcar todos
-                                    </label>
-                                    <button
-                                        className='listtodos_btn'
-                                        disabled={!(totalTodosFinished > 0)}
-                                        onClick={() => toggleTodos('Completed', 'Pending')}
-                                    >
-                                        Pasar a Pendientes
-                                    </button>
-                                </div>
-                                <MostrarToDos todos={todosFinished} />
-                            </article> */}
                             <MdArrowUpward
                                 className="icono-arrow icono-hidemform"
                                 onClick={toggleForm}
