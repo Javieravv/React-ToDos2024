@@ -11,7 +11,7 @@ export const Header = () => {
     const { resetUser } = useUserStore()
 
     const todoLogin = async () => {
-        await login()
+        login()
     }
 
     const todoLogout = async () => {
@@ -19,7 +19,7 @@ export const Header = () => {
         resetListTodos();
         localStorage.setItem('todo-user', '');
         localStorage.setItem('user-todo', '');
-        await logout();
+        logout();
     }
 
     return (

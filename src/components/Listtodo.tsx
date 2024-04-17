@@ -35,7 +35,6 @@ const MostrarTodo: FC<todosList> = (todo) => {
     const handleDeleteTodo = () => {
         removeTodo(`${todo.userId}/${todo.id}`)
             .then(() => {
-                console.log('Todo removido con éxito...')
                 deleteTodo(todo.id)
                 toast.error('To-Do eliminado de manera exitosa.')
             })
