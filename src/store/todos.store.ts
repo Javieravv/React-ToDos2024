@@ -1,9 +1,7 @@
 // Store para lostodos 
 import { create } from 'zustand'
 import { TypeTodo, todosList } from '../interfaces/interfacesTodos';
-import { createJSONStorage, devtools, persist, StateStorage } from 'zustand/middleware';
-import { fetchTodo, updateTodo, writeTodo } from '../db/fetchData';
-import { useUserStore } from './user.store';
+import { devtools, persist } from 'zustand/middleware';
 
 interface TodoState {
     listTodos: todosList[];
