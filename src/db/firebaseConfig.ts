@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 
 import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
 const firebaseConfig = {
   apiKey              : import.meta.env.VITE_REACT_APP_APIKEY,
   authDomain          : import.meta.env.VITE_REACT_APP_AUTHDOMAIN,
@@ -12,4 +13,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export default app;
+const db = getDatabase(app);
+export default db;

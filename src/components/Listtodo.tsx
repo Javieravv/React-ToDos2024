@@ -1,19 +1,21 @@
 // Componente para las listas de todos
 import { FC, useEffect, useState } from "react";
-import { todosList, todosProps, TypeTodo, User } from '../interfaces/interfacesTodos';
+import { todosList, todosProps, TypeTodo } from '../interfaces/interfacesTodos';
 import { MdArrowDownward, MdArrowUpward, MdDelete, MdModeEditOutline } from "react-icons/md";
 import { IoIosArrowForward, IoIosArrowUp } from "react-icons/io";
 import { useListStorage } from "./hooks.ts/useListStorage";
-import { fetchTodo, removeTodo, updateTodo } from "../db/fetchData";
+import { removeTodo, updateTodo } from "../db/fetchData";
 import { TodosCompletedEmpthy, Todosempthy, TodosPendingEmpty } from "./mainpage";
 import { toast } from "react-toastify";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import { useUserStore } from "../store/user.store";
 import { useTodosStore } from "../store/todos.store";
+import { onValue, ref } from "firebase/database";
+import db from "../db/firebaseConfig";
 
 const MostrarTodo: FC<todosList> = (todo) => {
     const [viewDescription, setViewDescription] = useState(false)
-    const { deleteTodo, initializeItem, toggleTodoUnique } = useListStorage()
+    const { initializeItem } = useListStorage()
 
     const handleEditTodo = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -30,7 +32,9 @@ const MostrarTodo: FC<todosList> = (todo) => {
         todoTemp.typeTodo = (typeTodoTemp === 'Pending') ? 'Completed' : 'Pending';
         updateTodo(`${todo.userId}/${todo.id}`, todoTemp)
             .then(() => {
-                toggleTodoUnique(todo.id, typeTodoTemp)
+                // toggleTodoUnique(todo.id, typeTodoTemp)
+                toast.success('Estado del To-Do modificado de manera exitosa.')
+
             });
     }
 
@@ -38,7 +42,7 @@ const MostrarTodo: FC<todosList> = (todo) => {
     const handleDeleteTodo = () => {
         removeTodo(`${todo.userId}/${todo.id}`)
             .then(() => {
-                deleteTodo(todo.id)
+                // deleteTodo(todo.id)
                 toast.error('To-Do eliminado de manera exitosa.')
             })
     }
@@ -116,20 +120,25 @@ export const Listtodo = () => {
     const { user } = useKindeAuth();
     const { initializeUser } = useUserStore()
     const { setListTodos } = useTodosStore()
-    
+
     const { totalTodosPending, totalTodosFinished, isVisibleListTodo, toggleisVisibleListToDo, listTodos, todosPending,
         todosFinished } = useListStorage();
     const [listTodoView, setListTodoView] = useState(0)
 
     useEffect(() => {
-        if (user) {
-            try {
-                fetchTodo(user.id || '').then((dataTodos: todosList[]) => {
-                    setListTodos(dataTodos);
-                });
-            } catch (error) {
-                console.log('SE HA PRODUCIDO UN ERROR...', error)
-            }
+        const listTodosUser = ref(db, `${user ? user.id : ''}` );
+        try {
+            onValue(listTodosUser, (snapshot) => {
+                let dataTodos: todosList[] = []
+                if (snapshot.val()) {
+                    dataTodos = Object.values(snapshot.val());
+                }
+                setListTodos(dataTodos);
+            })
+        } catch (error) {
+            console.log('Error al recuperar los todos.')
+            setListTodos([]);
+            // return <h2>Error al recuperar los todos de la bd...</h2>
         }
     }, [user, initializeUser, setListTodos])
 

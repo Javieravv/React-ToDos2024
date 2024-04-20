@@ -12,8 +12,7 @@ export const InputTodo = () => {
     const { user } = useKindeAuth()
 
     const { todoItem, title, description, changeTitleItem, 
-        changeDescriptionItem, initializeItem, 
-        addTodo, editDataTodo, isVisibleForm, toggleisVisibleFormToDo } = useInputStorage()
+        changeDescriptionItem, initializeItem, isVisibleForm, toggleisVisibleFormToDo } = useInputStorage()
 
     const handleAddTodo = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         e.preventDefault()
@@ -34,7 +33,7 @@ export const InputTodo = () => {
             throw new Error('Se presentó un error....')
             // return false
         }
-        addTodo(itemTodo, 'Pending')
+        // addTodo(itemTodo, 'Pending') // No es necesaria esta línea con la actualización instantánea.
         toast.success('To-Do Agregado de manera exitosa.')
         initializeItem({title: '', id: '', stateTodo: false, userId: '', routeItem: '', description: '', typeTodo: 'Pending'});
         inputTitleTodo.current?.focus();
@@ -54,15 +53,16 @@ export const InputTodo = () => {
 
         try {
             updateTodo(`${todoItem.userId}/${todoItem.id}`, itemEditTodo)
-            .then(() => { console.log('TODO MODIFICADO....') })
+            .then(() => { 
+                toast.success('To-Do modificado manera exitosa.')
+             })
         } catch (error) {
             throw new Error('Se presentó un error al modificar el todo....')
             // return false
         }
 
 
-        editDataTodo(todoItem.id!, title, description)
-        toast.success('To-Do modificado  de manera exitosa.')
+        // editDataTodo(todoItem.id!, title, description) // No es necesaria.
         initializeItem({title: '', id: '', stateTodo: false, userId: '', routeItem: '', description: '', typeTodo: 'Pending'});
         inputTitleTodo.current?.focus();
     }

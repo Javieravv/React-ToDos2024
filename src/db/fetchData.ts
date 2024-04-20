@@ -1,9 +1,9 @@
-import { getDatabase, ref, set, get, remove } from "firebase/database";
-import app from "./firebaseConfig";
+import { ref, set, get, remove } from "firebase/database";
 import { todosList } from "../interfaces/interfacesTodos";
+import db from "./firebaseConfig";
 
 export const fetchTodo = async (user: string = ''):Promise<todosList[] | []> => {
-    const db = getDatabase(); // Assuming you have 'getDatabase' defined
+    // const db = getDatabase(); // Assuming you have 'getDatabase' defined
     const userRef = ref(db, user); // Reference to the user node
     try {
         const snapshot = await get(userRef); // Use 'await' for async function
@@ -16,25 +16,24 @@ export const fetchTodo = async (user: string = ''):Promise<todosList[] | []> => 
             return []; // Return empty array if no data
         }
     } catch (error) {
-        alert('SE HA PRODUCIDO UN ERROR....')
         console.error("Error fetching data:", error);
         return []; // Return empty array on error
     }
 }
 
 export const writeTodo = async (user: string, itemTodo: todosList) => {
-    const db = getDatabase(app)
+    // const db = getDatabase(app)
     set(ref(db, user), itemTodo)
 }
 
 export const updateTodo = async (routeTodo: string, itemTodo: todosList) => {
     // routeTodo es la ruta donde se guardará el todo. Si el usuario no tiene ruta inicial la creará
-    const db = getDatabase(app)
+    // const db = getDatabase(app)
     set(ref(db, routeTodo), itemTodo)
 }
 
 export const removeTodo = async (routeTodo: string) => {
-    const db = getDatabase(app)
+    // const db = getDatabase(app)
     remove(ref(db, routeTodo))
 }
 

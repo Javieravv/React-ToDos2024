@@ -26,7 +26,6 @@ export const Header = () => {
                 picture: user.picture || undefined
             }
             initializeUser(dataUser.id, dataUser.given_name, dataUser.family_name, dataUser.email, dataUser.picture);
-            console.log('RENDERIZAMOS HEADER, ')
         }
     }, [user, initializeUser])
 
@@ -34,7 +33,7 @@ export const Header = () => {
         login()
     }
 
-    const todoLogout = async () => {
+    const todoLogout = () => {
         resetUser();
         resetListTodos();
         localStorage.setItem('todo-user', '');
