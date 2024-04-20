@@ -16,6 +16,7 @@ export const fetchTodo = async (user: string = ''):Promise<todosList[] | []> => 
             return []; // Return empty array if no data
         }
     } catch (error) {
+        alert('SE HA PRODUCIDO UN ERROR....')
         console.error("Error fetching data:", error);
         return []; // Return empty array on error
     }

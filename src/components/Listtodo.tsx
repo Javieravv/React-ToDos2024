@@ -1,12 +1,15 @@
 // Componente para las listas de todos
-import { FC, useState } from "react";
-import { todosList, todosProps, TypeTodo } from '../interfaces/interfacesTodos';
+import { FC, useEffect, useState } from "react";
+import { todosList, todosProps, TypeTodo, User } from '../interfaces/interfacesTodos';
 import { MdArrowDownward, MdArrowUpward, MdDelete, MdModeEditOutline } from "react-icons/md";
 import { IoIosArrowForward, IoIosArrowUp } from "react-icons/io";
 import { useListStorage } from "./hooks.ts/useListStorage";
-import { removeTodo, updateTodo } from "../db/fetchData";
+import { fetchTodo, removeTodo, updateTodo } from "../db/fetchData";
 import { TodosCompletedEmpthy, Todosempthy, TodosPendingEmpty } from "./mainpage";
 import { toast } from "react-toastify";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+import { useUserStore } from "../store/user.store";
+import { useTodosStore } from "../store/todos.store";
 
 const MostrarTodo: FC<todosList> = (todo) => {
     const [viewDescription, setViewDescription] = useState(false)
@@ -110,9 +113,25 @@ const MostrarToDos: FC<todosProps> = ({ todos }) => {
 
 
 export const Listtodo = () => {
+    const { user } = useKindeAuth();
+    const { initializeUser } = useUserStore()
+    const { setListTodos } = useTodosStore()
+    
     const { totalTodosPending, totalTodosFinished, isVisibleListTodo, toggleisVisibleListToDo, listTodos, todosPending,
         todosFinished } = useListStorage();
     const [listTodoView, setListTodoView] = useState(0)
+
+    useEffect(() => {
+        if (user) {
+            try {
+                fetchTodo(user.id || '').then((dataTodos: todosList[]) => {
+                    setListTodos(dataTodos);
+                });
+            } catch (error) {
+                console.log('SE HA PRODUCIDO UN ERROR...', error)
+            }
+        }
+    }, [user, initializeUser, setListTodos])
 
     const toggleForm = () => {
         // Retrasa la acción de mostrar/ocultar el formulario
