@@ -5,6 +5,8 @@ import { useUserStore } from "../store/user.store";
 import { useTodosStore } from "../store/todos.store";
 import { useEffect } from "react";
 import { User } from "../interfaces/interfacesTodos";
+import iconoLogin from '../assets/image/login.svg';
+import iconoLogout from '../assets/image/logout.svg';
 
 
 
@@ -62,10 +64,16 @@ export const Header = () => {
                     {
                         (isAuthenticated)
                             ? (
-                                <button className="btn-authenticate" onClick={() => todoLogout()} >Logout</button>
+                                <button className="btn-authenticate btn-logout" onClick={() => todoLogout()} >
+                                    <img className='iconoLogin' src={iconoLogout} alt="Login" />
+                                    {/* Logout */}
+                                    </button>
                             )
                             : (
-                                <button className="btn-authenticate" onClick={() => todoLogin()} >Log In</button>
+                                <button className="btn-authenticate btn-login" onClick={() => todoLogin()} >
+                                    <img className='iconoLogin' src={iconoLogin} alt="Login" />
+                                    {/* Log In */}
+                                </button>
                             )
                     }
                     <Theme />

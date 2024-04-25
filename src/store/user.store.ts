@@ -8,13 +8,14 @@ interface UserItem {
     userData: User;
     initializeUser: (id: string, given_name: string, family_name:string, email:string, picture: string | undefined) => void;
     resetUser: () => void;
+    getIdUser: () => string;
 }
 
 export const useUserStore = create<UserItem>()(
     // Con la instrucción persist se guarda el store en localStore
     devtools(
         persist(
-            (set) => ({
+            (set, get) => ({
                 userData: { 
                     id:          '',
                     given_name:  '',
@@ -29,6 +30,10 @@ export const useUserStore = create<UserItem>()(
 
                  resetUser: () => {
                     set ({ userData: {id: '', given_name: '', family_name: '', email: '', picture: undefined} })
+                 },
+
+                 getIdUser: () => {
+                    return get().userData.id;
                  },
 
             }), { name: 'todo-user' }

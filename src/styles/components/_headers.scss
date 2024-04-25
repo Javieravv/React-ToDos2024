@@ -56,4 +56,27 @@
     color: white;
     border-radius: 10px;
     cursor: pointer;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.btn-logout {
+    @media (width > $widthMobile) {
+        &:after {
+            content: 'Logout';
+        }
+    }
+}
+
+.btn-login {
+    @media (width > $widthMobile) {
+        &:after {
+            content: 'Login';
+        }
+    }
+}
+
+.iconoLogin {
+    width: 20px;
 }

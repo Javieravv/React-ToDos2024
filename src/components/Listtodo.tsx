@@ -13,6 +13,7 @@ import { useTodosStore } from "../store/todos.store";
 import { onValue, ref } from "firebase/database";
 import db from "../db/firebaseConfig";
 
+
 const MostrarTodo: FC<todosList> = (todo) => {
     const [viewDescription, setViewDescription] = useState(false)
     const { initializeItem } = useListStorage()
@@ -34,7 +35,6 @@ const MostrarTodo: FC<todosList> = (todo) => {
             .then(() => {
                 // toggleTodoUnique(todo.id, typeTodoTemp)
                 toast.success('Estado del To-Do modificado de manera exitosa.')
-
             });
     }
 
@@ -119,14 +119,18 @@ const MostrarToDos: FC<todosProps> = ({ todos }) => {
 export const Listtodo = () => {
     const { user } = useKindeAuth();
     const { initializeUser } = useUserStore()
+    const idUser = useUserStore(state => state.getIdUser());
+
+
     const { setListTodos } = useTodosStore()
+    const [loading, setLoading] = useState(false)
 
     const { totalTodosPending, totalTodosFinished, isVisibleListTodo, toggleisVisibleListToDo, listTodos, todosPending,
         todosFinished } = useListStorage();
     const [listTodoView, setListTodoView] = useState(0)
 
     useEffect(() => {
-        const listTodosUser = ref(db, `${user ? user.id : ''}` );
+        const listTodosUser = ref(db, `${user ? user.id : ''}`);
         try {
             onValue(listTodosUser, (snapshot) => {
                 let dataTodos: todosList[] = []
@@ -134,9 +138,11 @@ export const Listtodo = () => {
                     dataTodos = Object.values(snapshot.val());
                 }
                 setListTodos(dataTodos);
+                setLoading(true);
             })
         } catch (error) {
             console.log('Error al recuperar los todos.')
+            setLoading(true);
             setListTodos([]);
             // return <h2>Error al recuperar los todos de la bd...</h2>
         }
@@ -148,6 +154,18 @@ export const Listtodo = () => {
             toggleisVisibleListToDo();
         }, 200); // 200 milisegundos de retraso
     };
+
+    if (!loading) {
+        return (
+            <section className="spiner-loader">
+                <span className="loader"></span>
+            </section>
+        )
+    }
+
+    if (idUser === '') {
+        return <section><h1>No hay usuario...</h1></section>
+    }
 
     if (listTodos.length === 0) {
         return (<Todosempthy />)
